@@ -1,0 +1,33 @@
+.banner {
+	min-height: 26px;
+	background-color: #111;
+	padding: 3px 20px;
+	color: #fff;
+	text-align: center;
+	font-size: 12px;
+}
+.banner.no-network {
+	background-color: #efdc67;
+	color: #444;
+}
+.banner.slow-network {
+	background-color: #efdc67;
+	color: #444;
+}
+.banner.app-error {
+	background-color: #e6653f;
+}
+.msg-loss-error {
+	background-color: #dc7e09;
+	position: relative;
+}
+.close-ribbon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 3px 10px;
+	cursor: pointer;
+}
+.cursor-default{
+	cursor: default;
+}

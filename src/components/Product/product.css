@@ -1,0 +1,73 @@
+
+.paymentInfo {
+    width: 100%;
+    height: auto;
+    padding:15px 10px;
+    border: 1px solid #ddd;
+    margin: 20px 0px;
+}
+.mt-list-item{
+    box-shadow: 0px 0px 5px 0px #0000003b;
+    padding: 20px 15px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0px;
+    position: relative;
+}
+.dfv-pri-icn{
+    width: 10px;
+}
+.mto-go-to-home{
+    background-color: #333333 !important;
+    color: #ffffff !important;
+}
+.mto-offered-value{
+    color: #7E7E7E !important;
+}
+.proPg-btnArea {
+	width: 100%;
+}
+.proPg-btnArea-div-outer {
+	list-style:none;
+	text-align:center;
+	width:100%;
+  display: flex;
+  margin-top: 20px;
+}
+.proPg-btnArea-div-inner  {
+  display:inline-block;
+  cursor: pointer;
+  flex: 1;
+  margin: 0 5px;
+
+}
+.proPg-btnArea .proPg-btnArea-div-outer input {
+	padding:15px;
+	border-radius:5px;
+	font-size:12px;
+	line-height:12px;
+    display: block;
+}
+
+.bid-exp-countdown{
+    font: normal normal bold 16px/12px Noto Serif;
+    color: #B93333 !important;
+    font-size: 16px;
+}
+.highest-bid{
+    color: #fc832d !important;
+}
+.bid-reserve-price-val{
+    color: #5ba018 !important;
+}
+.bid-inp-err{
+    position: absolute;
+    left: 135px;
+}
+
+.order-placed-main .order-placed-view .img-fluid{
+    height: 128px !important;
+    width: 191px !important;
+}

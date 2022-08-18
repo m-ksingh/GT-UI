@@ -1,0 +1,50 @@
+[
+    {
+      "id": 1,
+      "imageUrl": "images/gun.png",
+      "name": "Skorpion_Popular",
+      "price": "$230"
+    },
+    {
+      "id": 2,
+      "imageUrl": "images/gun.png",
+      "name": "Skorpion_Popular",
+      "price": "$230"
+    },
+    {
+      "id": 3,
+      "imageUrl": "images/gun.png",
+      "name": "Skorpion_Popular",
+      "price": "$230"
+    },
+    {
+      "id": 4,
+      "imageUrl": "images/gun.png",
+      "name": "Skorpion_Popular",
+      "price": "$230"
+    },
+    {
+      "id": 5,
+      "imageUrl": "images/gun.png",
+      "name": "Skorpion_Popular",
+      "price": "$230"
+    },
+    {
+      "id": 6,
+      "imageUrl": "images/gun.png",
+      "name": "Skorpion_Popular",
+      "price": "$230"
+    },
+    {
+      "id": 7,
+      "imageUrl": "images/gun.png",
+      "name": "Skorpion_Popular",
+      "price": "$230"
+    },
+    {
+      "id": 8,
+      "imageUrl": "images/gun.png",
+      "name": "Skorpion_Popular",
+      "price": "$230"
+    }
+  ]

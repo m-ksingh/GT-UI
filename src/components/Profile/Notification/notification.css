@@ -1,0 +1,316 @@
+.pickup-box {
+  padding: 20px 30px;
+}
+.pickSlot {
+  padding: 10px 0px;
+}
+.pickSlot .dropdown-menu {
+  transform: translate(0px, 33px) !important;
+}
+.pickSlot .dropdown-custom {
+  border-radius: 4px;
+}
+.pickSlot .w97 {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+.pickSlot .react-datepicker-wrapper {
+  position: relative;
+}
+.schedule-pick-up .pickup-container {
+  max-width: 500px !important;
+}
+.date-between {
+  width: 100%;
+  display: flex;
+  border: 1px solid #d2d8d8;
+  padding: 6px 25px;
+  border-radius: 2px;
+  align-items: center;
+}
+.date-between input {
+  width: 100%;
+  border: 0px;
+}
+.date-between div {
+  margin: 0px;
+}
+.date-between input:focus {
+  border: 0px;
+  outline: 0px;
+}
+.expireTime {
+  color: #ea612e;
+}
+.rejectBtn {
+  color: #ea612e !important;
+  border-color: #ea612e !important;
+}
+.acceptBtn {
+  color: #5ba018 !important;
+  border-color: #5ba018 !important;
+}
+.tradeContent {
+  max-width: 125px;
+}
+.schedule-pick-up .dropdown-custom .dropdown-menu {
+  min-width: 185px !important;
+  padding: 0px;
+}
+.notification-button {
+  border-radius: 20px !important;
+  height: 27px !important;
+}
+
+/* conformDate */
+
+.conform-box-container {
+  padding: 20px;
+  box-shadow: 0px 2px 5px #00000029;
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+.conform-box {
+  display: flex;
+  margin-top: 10px;
+}
+
+/* notification slider */
+.notification-box {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  margin: 10px;
+  height: max-content;
+}
+.nb-body {
+  padding: 0px 15px;
+}
+.nl-price {
+  font-size: 12px;
+  line-height: 14px;
+  color: #487916;
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+.nl-body-header {
+  font-style: italic;
+  font-size: 12px;
+  color: #333333;
+}
+.nl-location {
+  font-size: 10px;
+  color: #333333;
+}
+.nl-item-name {
+  font-size: 14px;
+  line-height: 17px;
+  color: #487916;
+  font-weight: 600;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 195px;
+}
+.nl-tob {
+  padding: 15px !important;
+  border-radius: 5px;
+  max-width: 299px;
+  position: relative;
+}
+.nl-tob img {
+  width: 50px !important;
+  height: 50px !important;
+}
+.nl-trade-circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #477716;
+  border-radius: 50%;
+  box-shadow: 0px 3px 3px #00000029;
+  position: absolute;
+  top: 45px;
+  right: -23px;
+  background-color: white;
+  display: grid;
+  z-index: 998;
+  align-items: center;
+  justify-content: center;
+}
+.wh50 {
+  width: 50px !important;
+  height: 50px !important;
+}
+.nl-counter-circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #477716;
+  border-radius: 50%;
+  box-shadow: 0px 3px 3px #00000029;
+  background-color: white;
+  display: grid;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.hrDivider {
+  border-right: 1px solid #ddd;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+/* steps to follow */
+.stf-container {
+  width: 600px !important;
+}
+.stf-header {
+  color: #487916;
+  font-size: 12px;
+  padding: 20px 0px;
+  text-align: center;
+}
+.stf-circle {
+  height: 35px;
+  width: 35px;
+  border: 1px solid #d1d1d1;
+  border-radius: 50%;
+  background-color: white;
+  display: grid;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.stf-ra {
+  color: #f42f2f;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* authenticate otp */
+.am-otp-label {
+  color: #487916;
+  font-size: 14px;
+  padding: 10px 0px;
+  text-align: center;
+}
+.otp-inp-box {
+  margin-bottom: 50px;
+}
+.otp-inp-box input {
+  height: 58px;
+  width: 52px !important;
+  box-shadow: 0px 1px 1px #0000001a;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+.otp-num {
+  padding: 0 20px;
+  font-size: 28px;
+}
+.otp-close {
+  border: 2px solid #c1c1c1;
+  background-color: #f5f5f5 !important;
+}
+.auth-success {
+  padding: 50px 0px 0px 0px;
+}
+.auth-s-body {
+  height: 300px;
+}
+
+/* counter trade */
+.counter-value-label {
+  color: #707070;
+}
+.counter-price {
+  border-bottom: 2px solid #707070 !important;
+  font-size: 24px !important;
+  color: #000000 !important;
+  width: 150px !important;
+}
+.counter-trade .form-control {
+  border: none;
+}
+.counter-trade .form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: none;
+  outline: 0;
+  box-shadow: none !important;
+}
+.schedule-label-divider {
+  width: 200px;
+  min-width: 100px;
+  border-top: 2px solid #ddd;
+  position: relative;
+  top: 15px;
+  margin: 0 18px;
+}
+.s-hr-line {
+  border-top: 2px solid #5ca017;
+}
+.scheduleLabel {
+  color: #7e7e7e;
+  font-size: 12px;
+  padding-top: 5px;
+}
+.active-s-label {
+  color: #5ca017 !important;
+}
+.disable-s-label {
+  color: #ddd !important;
+  cursor: auto !important;
+}
+.return-s-cancel-btn {
+  background: #f5f5f5 !important;
+  color: #333333 !important;
+  padding: 14px 30px !important;
+  border: 2px solid #c1c1c1 !important;
+}
+.confirm-date-modal .form-check .form-check-input {
+  margin-top: 5px !important;
+}
+.return-confirm-date .form-check .form-check-input {
+  margin-top: 6px !important;
+}
+.return-confirm-date .form-check .form-check-label {
+  padding-left: 10px !important;
+}
+
+/* provide shipping info */
+.provide-shipping-info .react-datepicker-wrapper {
+  position: relative;
+}
+.confirm-date-modal label {
+  padding-top: 4px !important;
+  padding-left: 20px !important;
+}
+.schedule-pick-up label {
+  padding-top: 4px !important;
+  padding-left: 20px !important;
+}
+.notification-modal .btn-warning {
+  height: 28px;
+}
+
+.select-item-pickup .cd-signin-modal__container {
+  max-height: 95%;
+  overflow-y: auto;
+}
+.btn-size {
+  height: 48px !important;
+}
+.counter-offer {
+  line-height: 18px !important;
+  margin-bottom: 10px !important;
+}
+.notification-delete-icon {
+  position: absolute;
+  top: -15px;
+  right: -2px;
+}

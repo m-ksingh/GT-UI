@@ -1,0 +1,19 @@
+.productdetail{
+    display: flex; /* block level display */
+    flex-wrap: wrap; /* wrap container so that flex items don't overflow */
+    .product-detail-image {
+        flex-grow: 1;
+        flex-basis: 45%;
+    }
+    
+    .product-detail-image img {
+        margin: 0 auto;
+        display: flex;
+    }
+    
+    .product-detail-info {
+        flex-grow: 1;
+        flex-basis: 50%;
+        padding: 25px;
+    }
+}

@@ -1,0 +1,19 @@
+.header {
+    padding: 10px;
+    background-color: #4596b7;
+}
+.header a{
+       display: inline-block;
+        margin-right: 10px;
+        padding: 5px 10px;
+        color: wheat;
+}
+.header a svg{
+    width: 18px;
+    margin-right: 5px;
+}
+
+
+.nav_right {
+    float: right;
+}

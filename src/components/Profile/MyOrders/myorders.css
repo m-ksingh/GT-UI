@@ -1,0 +1,56 @@
+.small-size{
+    font-size: 12px;
+}
+.font-it{
+    font-style: italic;
+    font-size: 14px;
+    color:#333333;
+}
+.confirmBtn{
+    color: #5BA018 !important;
+    border-color: #6B9D35 !important;
+}
+.statusBtn{
+    height: 25px;
+    width: 66px;
+    background-color: #669339;
+    color: white;
+    font-size: 9px;
+    text-transform: capitalize;
+    text-align: center;
+    border: 1px solid #669339;
+    border-radius: 13px;
+}
+.ohs-div{
+    position: relative;
+}
+.ohs-box-h-line{
+    border-left: 1px solid #DEDEDE;
+    position: absolute;
+    height: 83%;
+    left: 19px;
+    top: 10px;
+}
+.ohs-item-round{
+    height:9px;
+    width:9px;
+    color:#A2A2A2;
+    background-color: #A2A2A2;
+    border-radius: 50%;
+    z-index: 1;
+}
+.ohs-item-title{
+    width: 150px;
+}
+.ohs-date{
+    color: #707070;
+}
+.ohs-item{
+    width: 400px
+}
+.ohd-toggle-icon{
+    position: absolute;
+    top: 0;
+    left: -5px;
+    color: #A2A2A2;
+}

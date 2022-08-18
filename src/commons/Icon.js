@@ -1,0 +1,2 @@
+
+// export const ICN_ERR_G = <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14"><defs><style>.a,.d{fill:none;}.a{stroke:#2b40f5;}.b{fill:#2e35ff;font-size:8px;font-family:GillSans, Gill Sans;}.c{stroke:none;}</style></defs><g class="a"><rect class="c" width="14" height="14" rx="7"/><rect class="d" x="0.5" y="0.5" width="13" height="13" rx="6.5"/></g><text class="b" transform="translate(6 10)"><tspan x="0" y="0">!</tspan></text></svg>

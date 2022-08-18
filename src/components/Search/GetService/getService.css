@@ -1,0 +1,94 @@
+.gt-service-check .custom-control-inline{
+    display: block;
+    margin-top: 10px;
+    display: flex;
+    align-items: center
+}
+.gt-service-check input{
+    margin-top: 0 !important; 
+}
+.serviceList{
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0px 2px 10px #0000001a;
+    margin: 20px 0px;
+    font-size: 13px;
+    color: #000000b8;
+    background-color: #ffffff;
+}
+.store-details-sec{
+    background: white;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+.service-details-con{
+    background:#F4F4F4;
+    
+}
+ .left-sidebar label{
+    line-height: 24px !important;
+}
+.modal-scroll{
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    width: 100%;
+    height: 90vh;
+}
+.service-body{
+    padding: 0px 20px;
+    overflow-y: auto;
+    text-align: justify;
+}
+.service-body .desktop-clear-filter {
+    position: absolute;
+    top: 63px;
+}
+.dialer-footer{
+    text-align: center;
+    padding: 20px;
+}
+.dialer-contact-store{
+    background-color: #F4F4F4;
+}
+.submt-btn-dialer:hover {
+    color: #fff;
+}
+
+@media only screen and (max-width: 600px){
+    .wishList-modal{
+        width: 90% !important;
+    }
+    .modal-scroll{
+        height: auto;
+    }
+    #button-section li a {
+        padding: 5px 7px;
+        min-width: 80px;
+        font-size: 12px;
+    }
+    .dialer-footer {
+		text-align: center;
+    padding: 15px 25px;
+    position: fixed;
+    bottom: 0px;
+    z-index: 9999999;
+    background: white;
+    width: 100%;
+    border-top: 1px #ddd solid;
+    display: flex;
+    justify-content: center;
+
+	}
+    .dialer-footer .submt-btn-dark{
+        padding: 14px 63px; 
+        width: 100%;
+    }
+    .dialer-footer a:hover{
+        color:#fafafa
+    }
+    .filter-popup-box{
+        padding-left: 0px !important;
+    }
+}

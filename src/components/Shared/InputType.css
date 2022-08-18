@@ -1,0 +1,10 @@
+.react-datepicker-wrapper{
+    width: 100%;
+}
+
+.cd-signin-modal__fieldset .disabled {
+    background: #cccccc !important;
+    border: #e9ecef !important;
+    opacity: 1 !important;
+    color: white !important;
+}

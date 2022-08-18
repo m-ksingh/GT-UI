@@ -1,0 +1,24 @@
+.verify-box{
+    width: 600px;
+    border-radius: 8px;
+}
+.verify-title{
+    color: #487916 !important;
+    font-size: 28px;
+    font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; 
+}
+.verify-btn{
+    background-color:#5BA018;
+	border: 1px #5BA018 solid;
+    border-radius: 4px;
+	color: #ffffff;
+    height: 37px;
+    width: 165px;
+    cursor: pointer;
+}
+.link-exp{
+    color: red !important;
+}
+.request-sent{
+    text-align: center !important;
+}

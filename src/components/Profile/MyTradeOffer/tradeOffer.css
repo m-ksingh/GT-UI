@@ -1,0 +1,44 @@
+.tradeOffer-container{
+    display: flex;
+    width: 100%;
+    margin-top: 15px;
+    justify-content: center;
+}
+.tradeOffer-box{
+    border: 1px solid #ddd;
+    padding: 15px 15px;
+    flex: 1 1;
+    margin-bottom: 15px;
+    border-radius: 5px 0 0 5px;
+    max-width: 299px;
+    position: relative;
+}
+.tradeOffer-container .tradeOffer-box:last-child{
+    border-radius: 0 5px 5px 0;
+    margin-left: -1px;   
+}
+.small-img{
+    width: 16px;
+    margin-right: 5px;
+}
+.tradeOffer-box img {
+    /* width: 50px; */
+    height: 80px;
+}
+.trade-circle{
+    width: 45px;
+    height: 45px;
+    border: 1px solid #477716;
+    border-radius: 50%;
+    box-shadow: 0px 3px 3px #00000029;
+    position: absolute;
+    top: 100px;
+    right: -23px;
+    background-color: white;
+    display: grid;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    top: -10px;
+    
+}
