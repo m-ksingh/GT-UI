@@ -198,26 +198,26 @@ const ListingInfo = ({
             then: Yup.string().required("Required!"),
             otherwise: Yup.string().nullable(),
         }),
-        selectedBarrelName: Yup.string().when('selectedMandatory', {
-            is: (val) => val && val.includes("barrel length"),
-            then: Yup.string().required("Required!"),
-            otherwise: Yup.string().nullable(),
-        }),
-        selectedCapacityName: Yup.string().when('selectedMandatory', {
-            is: (val) => val && val.includes("capacity"),
-            then: Yup.string().required("Required!"),
-            otherwise: Yup.string().nullable(),
-        }),
-        selectedFrameName: Yup.string().when('selectedMandatory', {
-            is: (val) => val && val.includes("frame finish"),
-            then: Yup.string().required("Required!"),
-            otherwise: Yup.string().nullable(),
-        }),
-        selectedGripsName: Yup.string().when('selectedMandatory', {
-            is: (val) => val && val.includes("grips"),
-            then: Yup.string().required("Required!"),
-            otherwise: Yup.string().nullable(),
-        }),
+        // selectedBarrelName: Yup.string().when('selectedMandatory', {
+        //     is: (val) => val && val.includes("barrel length"),
+        //     then: Yup.string().required("Required!"),
+        //     otherwise: Yup.string().nullable(),
+        // }),
+        // selectedCapacityName: Yup.string().when('selectedMandatory', {
+        //     is: (val) => val && val.includes("capacity"),
+        //     then: Yup.string().required("Required!"),
+        //     otherwise: Yup.string().nullable(),
+        // }),
+        // selectedFrameName: Yup.string().when('selectedMandatory', {
+        //     is: (val) => val && val.includes("frame finish"),
+        //     then: Yup.string().required("Required!"),
+        //     otherwise: Yup.string().nullable(),
+        // }),
+        // selectedGripsName: Yup.string().when('selectedMandatory', {
+        //     is: (val) => val && val.includes("grips"),
+        //     then: Yup.string().required("Required!"),
+        //     otherwise: Yup.string().nullable(),
+        // }),
         itemType: Yup.string(),
         serialNumber: Yup.string().when("itemType", {
             is: (val) => val === GLOBAL_CONSTANTS.ITEM_TYPE.FIRE_ARM && (userDetails.user.appUserType !== GLOBAL_CONSTANTS.APP_USER_TYPE.DEALER && !userDetails.user.adminToFFlStore),
@@ -1326,7 +1326,9 @@ const ListingInfo = ({
                                                     values.selectedMandatory
                                                     && values.selectedMandatory.includes("capacity")
                                                     && <Form.Group>
-                                                        <Form.Label><h5 className="label-head">Capacity{values.selectedMandatory && values.selectedMandatory.includes("capacity") && <sup>*</sup>}</h5></Form.Label>
+                                                        <Form.Label><h5 className="label-head">Capacity{values.selectedMandatory && values.selectedMandatory.includes("capacity") 
+                                                        // && <sup>*</sup>
+                                                        }</h5></Form.Label>
                                                         <CustomDropdown {...{
                                                             data: (listOfCapacity?.length && listOfCapacity) || [],
                                                             bindKey: "name",
@@ -1349,7 +1351,10 @@ const ListingInfo = ({
                                                     values.selectedMandatory
                                                     && values.selectedMandatory.includes("barrel length")
                                                     && <Form.Group>
-                                                        <Form.Label><h5 className="label-head">Barrel Length{values.selectedMandatory && values.selectedMandatory.includes("barrel length") && <sup>*</sup>}</h5></Form.Label>
+                                                        <Form.Label><h5 className="label-head">Barrel Length{values.selectedMandatory && values.selectedMandatory.includes("barrel length")
+                                                        //  && <sup>*</sup>
+                                                         }
+                                                         </h5></Form.Label>
                                                         <CustomDropdown {...{
                                                             data: (listOfBarrelLength?.length && listOfBarrelLength) || [],
                                                             bindKey: "name",
@@ -1372,7 +1377,9 @@ const ListingInfo = ({
                                                     values.selectedMandatory
                                                     && values.selectedMandatory.includes("frame finish")
                                                     && <Form.Group>
-                                                        <Form.Label><h5 className="label-head">Frame Finish{values.selectedMandatory && values.selectedMandatory.includes("frame finish") && <sup>*</sup>}</h5></Form.Label>
+                                                        <Form.Label><h5 className="label-head">Frame Finish{values.selectedMandatory && values.selectedMandatory.includes("frame finish")
+                                                        //  && <sup>*</sup>
+                                                         }</h5></Form.Label>
                                                         <CustomDropdown {...{
                                                             data: (listOfFrameFinish?.length && listOfFrameFinish) || [],
                                                             bindKey: "name",
@@ -1395,7 +1402,9 @@ const ListingInfo = ({
                                                     values.selectedMandatory
                                                     && values.selectedMandatory.includes("grips")
                                                     && <Form.Group>
-                                                        <Form.Label><h5 className="label-head">Grips{values.selectedMandatory && values.selectedMandatory.includes("grips") && <sup>*</sup>}</h5></Form.Label>
+                                                        <Form.Label><h5 className="label-head">Grips{values.selectedMandatory && values.selectedMandatory.includes("grips") 
+                                                        // && <sup>*</sup>
+                                                        }</h5></Form.Label>
                                                         <CustomDropdown {...{
                                                             data: (listOfGrips?.length && listOfGrips) || [],
                                                             bindKey: "name",

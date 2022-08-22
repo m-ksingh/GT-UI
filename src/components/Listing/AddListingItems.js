@@ -66,26 +66,26 @@ function AddListingItems({
             then: Yup.string().required("Required!"),
             otherwise: Yup.string(),
         }),
-        selectedBarrelName: Yup.string().when('selectedMandatory', {
-            is: (val) => val && val.includes("barrel length"),
-            then: Yup.string().required("Required!"),
-            otherwise: Yup.string(),
-        }),
-        selectedCapacityName: Yup.string().when('selectedMandatory', {
-            is: (val) => val && val.includes("capacity"),
-            then: Yup.string().required("Required!"),
-            otherwise: Yup.string(),
-        }),
-        selectedFrameName: Yup.string().when('selectedMandatory', {
-            is: (val) => val && val.includes("frame finish"),
-            then: Yup.string().required("Required!"),
-            otherwise: Yup.string(),
-        }),
-        selectedGripsName: Yup.string().when('selectedMandatory', {
-            is: (val) => val && val.includes("grips"),
-            then: Yup.string().required("Required!"),
-            otherwise: Yup.string(),
-        }),
+        // selectedBarrelName: Yup.string().when('selectedMandatory', {
+        //     is: (val) => val && val.includes("barrel length"),
+        //     then: Yup.string().required("Required!"),
+        //     otherwise: Yup.string(),
+        // }),
+        // selectedCapacityName: Yup.string().when('selectedMandatory', {
+        //     is: (val) => val && val.includes("capacity"),
+        //     then: Yup.string().required("Required!"),
+        //     otherwise: Yup.string(),
+        // }),
+        // selectedFrameName: Yup.string().when('selectedMandatory', {
+        //     is: (val) => val && val.includes("frame finish"),
+        //     then: Yup.string().required("Required!"),
+        //     otherwise: Yup.string(),
+        // }),
+        // selectedGripsName: Yup.string().when('selectedMandatory', {
+        //     is: (val) => val && val.includes("grips"),
+        //     then: Yup.string().required("Required!"),
+        //     otherwise: Yup.string(),
+        // }),
         estimatedPrice: Yup.number().typeError("Please enter a valid amount").min(1, "Minimum price should be 1").required("Price is required"),
         // pre1968: Yup.bool(),
         itemType: Yup.string(),
@@ -519,7 +519,9 @@ function AddListingItems({
                                                                     {
                                                                         values?.selectedMandatory?.includes("barrel length")
                                                                         && <Form.Group>
-                                                                            <Form.Label class="p-0"><h5 class="label-head mb-0">Barrel Length {isPrimary() && values?.selectedMandatory?.includes("barrel length") && <sup>*</sup>}</h5></Form.Label>
+                                                                            <Form.Label class="p-0"><h5 class="label-head mb-0">Barrel Length {isPrimary() && values?.selectedMandatory?.includes("barrel length") 
+                                                                            // && <sup>*</sup>
+                                                                            }</h5></Form.Label>
                                                                             <CustomDropdown {...{
                                                                                 data: (listOfBarrelLength?.length && listOfBarrelLength) || [],
                                                                                 bindKey: "name",
@@ -541,7 +543,9 @@ function AddListingItems({
                                                                     {
                                                                         values?.selectedMandatory?.includes("capacity")
                                                                         && <Form.Group>
-                                                                            <Form.Label class="p-0"><h5 class="label-head mb-0">Capacity {isPrimary() && values?.selectedMandatory?.includes("capacity") && <sup>*</sup>}</h5></Form.Label>
+                                                                            <Form.Label class="p-0"><h5 class="label-head mb-0">Capacity {isPrimary() && values?.selectedMandatory?.includes("capacity") 
+                                                                            // && <sup>*</sup>
+                                                                            }</h5></Form.Label>
                                                                             <CustomDropdown {...{
                                                                                 data: (listOfCapacity?.length && listOfCapacity) || [],
                                                                                 bindKey: "name",
@@ -563,7 +567,9 @@ function AddListingItems({
                                                                     {
                                                                         values?.selectedMandatory?.includes("frame finish")
                                                                         && <Form.Group>
-                                                                            <Form.Label class="p-0"><h5 class="label-head mb-0">Frame Finish {isPrimary() && values?.selectedMandatory?.includes("frame finish") && <sup>*</sup>}</h5></Form.Label>
+                                                                            <Form.Label class="p-0"><h5 class="label-head mb-0">Frame Finish {isPrimary() && values?.selectedMandatory?.includes("frame finish")
+                                                                            //  && <sup>*</sup>
+                                                                             }</h5></Form.Label>
                                                                             <CustomDropdown {...{
                                                                                 data: (listOfFrameFinish?.length && listOfFrameFinish) || [],
                                                                                 bindKey: "name",
@@ -585,7 +591,9 @@ function AddListingItems({
                                                                     {
                                                                         values?.selectedMandatory?.includes("grips")
                                                                         && <Form.Group>
-                                                                            <Form.Label class="p-0"><h5 class="label-head mb-0">Grips {isPrimary() && values?.selectedMandatory?.includes("grips") && <sup>*</sup>}</h5></Form.Label>
+                                                                            <Form.Label class="p-0"><h5 class="label-head mb-0">Grips {isPrimary() && values?.selectedMandatory?.includes("grips") 
+                                                                            // && <sup>*</sup>
+                                                                            }</h5></Form.Label>
                                                                             <CustomDropdown {...{
                                                                                 data: (listOfGrips?.length && listOfGrips) || [],
                                                                                 bindKey: "name",
