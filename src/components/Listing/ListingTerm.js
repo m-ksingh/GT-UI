@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect, useRef, memo } from 'react'
 import { Formik } from "formik"
 import * as Yup from 'yup';
 import _ from 'lodash';
@@ -6,8 +6,16 @@ import $ from 'jquery';
 import { Form } from 'react-bootstrap';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
+import TermAndCondition from '../Shared/TermAndCondition/TermAndCondition.';
+
 const ListingTerm = ({ setTab, listInfoByView, setListInfoByView, onCancelStep = () => {} }) => {
+    let termRef = useRef(false);
+    const [validCaptcha, setValidCaptcha] = useState(false)
+    const [agreeTermCondition, setAgreeTermCondition] = useState(false);
+    const [showTerm, setShowTerm] = useState(false);
+
     let defaultTermsValues = {
+        
         terms: false
     };
     const listDetail = _.cloneDeep(listInfoByView);
@@ -40,31 +48,50 @@ const ListingTerm = ({ setTab, listInfoByView, setListInfoByView, onCancelStep =
                     enableReinitialize={true}
                     validationSchema={schema}
                     initialValues={initialValues}
-                    onSubmit={onNextNav}>
+                >
                     {({ handleSubmit, isSubmitting, handleChange, touched, errors, values, setFieldValue, isValid, dirty }) => (
                         <div className="form-card">
-                            <div className="ts-ctn">
+                            {/* <div className="ts-ctn">
                                 <p className="text-left pb-4">Term & Conditions Coming soon..</p>
-                            </div>
+                            </div> */}
                             <div className="form-group magic-box mb-3 text-center">
                                 <Form noValidate>
                                     <Form.Group>
                                         <Form.Check
                                             required
                                             name="terms"
+                                            checked={termRef.current}
+                                            // checked={values.terms}
                                             id="listing-create-terms-aggree"
                                             label="I agree to the Terms"
+                                            
                                             onChange={(e) => {
-                                                setFieldValue("terms", e.target.checked);
+                                                handleChange(e);
+                                                termRef.current = e.target.checked;
                                                 if(!e.target.checked) $('#post').removeClass('active');
-                                                setListInfoByView({ 
+                                                if (e.target.checked) {
+                                                    setShowTerm(e.target.checked);
+                                                    setFieldValue("terms", e.target.checked); 
+                                                    setListInfoByView({ 
                                                     ...listInfoByView, 
                                                     'condition': { 
                                                         'terms' : e.target.checked
                                                     } 
                                                 })
+                                                   
+                                                } else {
+                                                    setValidCaptcha(false);
+                                                    setAgreeTermCondition(false);
+                                                }
+                                                // if(!e.target.checked) $('#post').removeClass('active');
+                                                // setListInfoByView({ 
+                                                //     ...listInfoByView, 
+                                                //     'condition': { 
+                                                //         'terms' : e.target.checked
+                                                //     } 
+                                                // })
                                             }}
-                                            checked={values.terms}
+                                            
                                             isInvalid={!!errors.terms}
                                             // feedback={errors.terms}
                                         />
@@ -75,7 +102,7 @@ const ListingTerm = ({ setTab, listInfoByView, setListInfoByView, onCancelStep =
                                     <div class="aic py15 jcc mobile-off">
                                         <input type="button" value="Cancel" class="submt-btn submt-btn-lignt mr10" onClick={() => onCancelStep()}></input>
                                         <input type="button" value="Previous" class="submt-btn submt-btn-lignt mr10" onClick={() => onPrevNav(values)}></input>
-                                        <input type="button" name="next" disabled={isSubmitting || !isValid || (_.isEmpty(listDetail.condition) && !dirty) || !values.terms} className="next action-button nextBtn nextBtnfst" value="Next" onClick={onNextNav} />
+                                        <input type="button" name="next" disabled={isSubmitting || !isValid || (_.isEmpty(listDetail.condition) && !dirty) || !values.terms || !termRef.current} className="next action-button nextBtn nextBtnfst" value="Next" onClick={onNextNav} />
                                     </div>
                                     <section class="mobile-btn-section desktop-off">
                                             <div class="container">
@@ -85,7 +112,7 @@ const ListingTerm = ({ setTab, listInfoByView, setListInfoByView, onCancelStep =
                                                             <ul>
                                                                 <li onClick={() => onCancelStep()}><a class="submt-btn submt-btn-lignt mr10 text-center">Cancel</a></li>
                                                                 <li onClick={() => onPrevNav(values)}><a class="submt-btn submt-btn-lignt mr10 text-center">Previous</a></li>
-                                                                <li onClick={handleSubmit}><a class="submt-btn submt-btn-dark text-center" disabled={isSubmitting || !isValid || (_.isEmpty(listDetail.condition) && !dirty)}>Next</a></li>
+                                                                <li onClick={onNextNav}><a class="submt-btn submt-btn-dark text-center" disabled={isSubmitting || !isValid || (_.isEmpty(listDetail.condition) && !dirty) || !values.terms || !termRef.current} >Next</a></li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -98,6 +125,30 @@ const ListingTerm = ({ setTab, listInfoByView, setListInfoByView, onCancelStep =
                         </div>
                     )}
                 </Formik>
+                {
+            showTerm
+            && <TermAndCondition
+                {...{
+                    show: showTerm,
+                    setShow: setShowTerm,
+                    showCaptcha: true,
+                    validCaptcha,
+                    setValidCaptcha,
+                    setAgreeTermCondition,
+                    onAgreeCallback: () => {
+                        setAgreeTermCondition(true);
+                    },
+                    onClickCloseIcon: () => {
+                        termRef.current = false;
+                        setValidCaptcha(false);
+                        setAgreeTermCondition(false);
+                        // setInitialValues({
+                        //     terms: false
+                        // })
+                    }
+                }}
+            />
+        }
             </div>
         </div>
     </fieldset>)

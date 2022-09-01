@@ -226,9 +226,9 @@ const Register = ({ setModalTab, setLoginModel, verificationStatus = () => { } }
                     <Form.Group>
                         <Form.Label><span>Confirm Password*</span></Form.Label>
                         <InputGroup>
-                            <Field name="confirmPass" className="form-control" placeholder="Confirm Password" type="password" />
+                            <Field name="confirmPass" className="form-control" placeholder="Confirm Password" type="password" id="cnfpass" />
                             <InputGroup.Append>
-                                <InputGroup.Text id="basic-add"><PasswordEye id=" " /></InputGroup.Text>
+                                <InputGroup.Text id="basic-add"><PasswordEye id="cnfpass" /></InputGroup.Text>
                             </InputGroup.Append>
                         </InputGroup>
                         <ErrorMessage component="span" name="confirmPass" className="text-danger mb-2 small-text" />
