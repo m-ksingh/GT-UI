@@ -90,6 +90,8 @@ function Filter({
     const [listOfFrameFinish, setListOfFrameFinish] = useState([]);
     const [listOfGrips, setListOfGrips] = useState([]);
     const [distance, setDistance] = useState(GLOBAL_CONSTANTS.DEFAULT_DISTANCE);
+    const [price, setPrice] = useState('');
+    const [maxprice, setMaxPrice] = useState('');
 
     const setListByArgs = (args, dataset) => {
         switch (args) {
@@ -253,6 +255,8 @@ function Filter({
                                                 setClearAll(true);
                                                 (() => setTimeout(() => {
                                                     setClearAll(true);
+                                                    setPrice('')
+                                                    setMaxPrice('')
                                                 }, 500))()
                                             }} className="clear-btn">
                                                 Clear All
@@ -264,6 +268,8 @@ function Filter({
                                             <a onClick={() => {
                                                 resetFilterValues();
                                                 resetForm();
+                                                setPrice('')
+                                                setMaxPrice('')
                                                 setDefaultRange({ min: 0, max: 100000 });
                                             }} className="clear-btn">
                                                 Clear All
@@ -315,25 +321,6 @@ function Filter({
 
                                         <p className="range-btext" hidden={values.nationwide}>{`Within ${values.distance} miles`}</p>
                                         <Form.Group>
-                                            <Form.Label className="p-0"><h5 className="label-head mb-0">Category</h5></Form.Label>
-                                            <CustomDropdown {...{
-                                                data: (listOfCategory?.length && listOfCategory) || [],
-                                                bindKey: "displayName",
-                                                searchKeywords: "",
-                                                title: (!_.isEmpty(values.category) && getSelectedCategoryTitleBySid({ list: (listOfCategory?.length && listOfCategory) || [], sid: values.category }))
-                                                    || values.selectedCategoryName
-                                                    || ` - Select Category - `,
-                                                onSelect: (d) => {
-                                                    setFieldValue("category", d.sid)
-                                                    setFieldValue("selectedCategoryName", d.selectedOption);
-                                                }
-                                            }} />
-                                            <Form.Control.Feedback type="invalid">
-                                                {errors.category}
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-
-                                        <Form.Group>
                                             <h5 className="label-head mb-1">Condition</h5>
                                             {
                                                 listOfCondition.map(d => (
@@ -354,6 +341,25 @@ function Filter({
                                         </Form.Group>
                                         <Form.Group className="range-selector">
                                             <h5 className="label-head mb-1">Price Range</h5>
+                                            {/* <input
+
+
+                                                className="form-control"
+                                                type="text"
+                                                value={price}
+                                                onChange={e => {
+                                                    if (e.target.value >= 0 && e.target.value <= 100000) {
+                                                        setPrice(e.target.value.replace(/\D/g,''));
+                                                        setDefaultRange({ min: 0, max: e.target.value });
+
+
+                                                        setFieldValue("priceRangeMax", e.target.value);
+                                                    }
+
+                                                }
+                                                }
+
+                                            /> */}
                                             <InputRange
                                                 formatLabel={() => ""}
                                                 minValue={0}
@@ -368,15 +374,80 @@ function Filter({
                                             />
                                         </Form.Group>
                                         <ul className="p-range form-group">
-                                            <li className="caption">
+                                           <div style={{display:"flex" ,flexDirection:"column"}}>
+                                           <li className="caption">
                                                 <p className="price-lab">Min Price</p>
-                                                <p className="price-tag" id="slider-range-value1">${values.priceRangeMin}</p>
+                                                <p className="price-tag" id="slider-range-value1">
+                                                    {/* ${values.priceRangeMin} */}
+                                                    <div style={{position:"relative"}}>
+                                                    <span style={{position:"absolute", left:"8px", top:"10px"}}>$</span>
+                                                    <input
+                                                 className="form-control px-4"
+                                                 type="text"
+                                                 value={values.priceRangeMin}
+                                                 onChange={e=>{
+                                                     if(e.target.value >=0 && e.target.value<=100000){
+                                                        
+                                                         setPrice(e.target.value.replace(/\D/g,''));
+                                                         setDefaultRange({min:e.target.value, max: 100000});
+                                                         
+                                                             
+                                                             setFieldValue("priceRangeMin", e.target.value);
+                                                     }
+                                                     
+                                                     }
+                                                 }
+                                                  />
+                                                  </div>
+                                                </p>
                                             </li>
-                                            <li className="text-right caption">
+                                            <li className="text-left caption my-3">
                                                 <p className="price-lab">Max Price</p>
-                                                <p className="price-tag" id="slider-range-value2">${values.priceRangeMax}</p>
+                                                <p className="price-tag" id="slider-range-value2">
+                                                    {/* ${values.priceRangeMax} */}
+                                                    <div style={{position:"relative"}}>
+                                                    <span style={{position:"absolute", left:"8px", top:"10px"}}>$</span>
+                                                    <input
+                                                      className="form-control px-4 "
+                                                      
+                                                       type="text"
+                                                       value={values.priceRangeMax}
+                                                       onChange={e=>{
+                                                           if(e.target.value >=0 && e.target.value<=100000){
+                                                              
+                                                               setMaxPrice(e.target.value.replace(/\D/g,''));
+                                                               setDefaultRange({min:0, max:e.target.value});
+                                                               
+                                                                   
+                                                                   setFieldValue("priceRangeMax", e.target.value);
+                                                           }
+                                                           
+                                                           }
+                                                       }
+                                                  />
+                                                  </div>
+                                                    </p>
                                             </li>
+                                           </div>
                                         </ul>
+                                        <Form.Group>
+                                            <Form.Label className="p-0"><h5 className="label-head mb-0">Category</h5></Form.Label>
+                                            <CustomDropdown {...{
+                                                data: (listOfCategory?.length && listOfCategory) || [],
+                                                bindKey: "displayName",
+                                                searchKeywords: "",
+                                                title: (!_.isEmpty(values.category) && getSelectedCategoryTitleBySid({ list: (listOfCategory?.length && listOfCategory) || [], sid: values.category }))
+                                                    || values.selectedCategoryName
+                                                    || ` - Select Category - `,
+                                                onSelect: (d) => {
+                                                    setFieldValue("category", d.sid)
+                                                    setFieldValue("selectedCategoryName", d.selectedOption);
+                                                }
+                                            }} />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.category}
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
                                         <Form.Group>
                                             <Form.Label className="p-0"><h5 className="label-head mb-0">Manufacturer</h5></Form.Label>
                                             <CustomDropdown {...{
@@ -503,6 +574,8 @@ function Filter({
                                                 {errors.grips}
                                             </Form.Control.Feedback>
                                         </Form.Group>
+                                      
+                                      
                                     </div>
                                     <div className="add-filter-footer desktop-off">
                                         <input type="submit" value="Apply Filters" className="submt-btn submt-btn-dark" onClick={handleSubmit} />
