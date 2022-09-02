@@ -30,7 +30,9 @@ function BuyFilter(props) {
     const [clearAll, setClearAll] = useState(true);
     const userDetails = useAuthState();
     const [agree, setAgree] = useState(false);
-
+    const [price, setPrice] = useState('');
+    const [maxprice, setMaxPrice] = useState('');
+   
     const schema = Yup.object().shape({
         keyword: Yup.string()
             .max(100, "100 Characters Maximum"),
@@ -287,7 +289,8 @@ function BuyFilter(props) {
     </>;
 
     return (
-        <Layout title="Buy Products" description="filter view" >
+        
+        <Layout title="Buy Products" description="filter view"  >
             <Breadcrumb {...{ data: (props?.location?.state?.breadcrumb && [...props?.location?.state?.breadcrumb]) || [] }} />
             <section id="buy-filter-section">
                 <div class="container">
@@ -310,6 +313,8 @@ function BuyFilter(props) {
                                                             resetLocation();
                                                             (() => setTimeout(() => {
                                                                 setClearAll(true);
+                                                                setPrice('')
+                                                                setMaxPrice('')
                                                             }, 500))()
                                                             setClearAll(true);
                                                             setDefaultRange({ min: 0, max: 100000 });
@@ -322,6 +327,8 @@ function BuyFilter(props) {
                                                 <p class="text-right desktop-off m-0"><a onClick={() => {
                                                     resetForm();
                                                     setDefaultRange({ min: 0, max: 100000 });
+                                                    setPrice('')
+                                                    setMaxPrice('')
                                                 }} class="clear-btn">Clear All</a></p>
                                                 <Form.Group className="desktop-off">
                                                     <Form.Label class="p-0"><h5 class="label-head mb-0">Keyword</h5></Form.Label>
@@ -366,24 +373,6 @@ function BuyFilter(props) {
                                                 />
                                                 <p class="range-btext" hidden={values.nationwide}>{`Within ${values.distance} miles`}</p>
                                                 <Form.Group>
-                                                    <Form.Label class="p-0"><h5 class="label-head mb-0">Category</h5></Form.Label>
-                                                    <CustomDropdown {...{
-                                                        data: (listOfCategory?.length && listOfCategory) || [],
-                                                        bindKey: "displayName",
-                                                        searchKeywords: "",
-                                                        title: (!_.isEmpty(values.category) && getSelectedCategoryTitleBySid({ list: (listOfCategory?.length && listOfCategory) || [], sid: values.category }))
-                                                            || values.selectedCategoryName
-                                                            || "- Select Category -",
-                                                        onSelect: (data) => {
-                                                            setFieldValue("category", data.sid)
-                                                            setFieldValue("selectedCategoryName", data.selectedOption);
-                                                        }
-                                                    }} />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        {errors.category}
-                                                    </Form.Control.Feedback>
-                                                </Form.Group>
-                                                <Form.Group>
                                                     <h5 className="label-head mb-1">Condition</h5>
                                                     {
                                                         listOfCondition.map((d, idx) => (
@@ -416,6 +405,74 @@ function BuyFilter(props) {
                                                             }
                                                         }}
                                                     /> */}
+                                                    
+                                                    {/* <input
+
+                                                     
+                                                        className="form-control"
+                                                        type="text"
+                                                        value={price}
+                                                        onChange={e=>{
+                                                            if(e.target.value >=0 && e.target.value<=100000){
+                                                               
+                                                                setPrice(e.target.value.replace(/\D/g,''));
+                                                                setDefaultRange({min: 0, max: e.target.value});
+                                                                
+                                                                    
+                                                                    setFieldValue("priceRangeMax", e.target.value);
+                                                            }
+                                                            
+                                                            }
+                                                        }
+
+                                                    /> */}
+                                                 {/* <div className="row">
+                                                 <div className="col-6">
+                                                  <Form.Label class="p-0"><h5 class="label-head mb-0">Min Price</h5></Form.Label>
+                                                    <input
+                                                     
+                                                     className="form-control"
+                                                     type="text"
+                                                     value={price}
+                                                     onChange={e=>{
+                                                         if(e.target.value >=0 && e.target.value<=100000){
+                                                            
+                                                             setPrice(e.target.value.replace(/\D/g,''));
+                                                             setDefaultRange({min:e.target.value, max: 100000});
+                                                             
+                                                                 
+                                                                 setFieldValue("priceRangeMin", e.target.value);
+                                                         }
+                                                         
+                                                         }
+                                                     }
+                                                    />
+                                                    </div>
+                                                    <div className="col-6">
+                                                    <Form.Label class="p-0"><h5 class="label-head mb-0">Max Price</h5></Form.Label>
+                                                    <input
+                                                     
+                                                     className="form-control"
+                                                     type="text"
+                                                     value={maxprice}
+                                                     onChange={e=>{
+                                                         if(e.target.value >=0 && e.target.value<=100000){
+                                                            
+                                                             setMaxPrice(e.target.value.replace(/\D/g,''));
+                                                             setDefaultRange({min:0, max:e.target.value});
+                                                             
+                                                                 
+                                                                 setFieldValue("priceRangeMax", e.target.value);
+                                                         }
+                                                         
+                                                         }
+                                                     }
+                                                    />
+                                                  
+                                                    </div>
+                                                 </div> */}
+
+                                                   
                                                     <InputRange
                                                         formatLabel={() => ""}
                                                         minValue={0}
@@ -430,16 +487,95 @@ function BuyFilter(props) {
                                                     />
 
                                                 </Form.Group>
-                                                <ul className="p-range form-group">
-                                                    <li className="caption">
-                                                        <p className="price-lab">Min Price</p>
-                                                        <p className="price-tag" id="slider-range-value1">${values.priceRangeMin}</p>
-                                                    </li>
-                                                    <li className="text-right caption">
-                                                        <p className="price-lab">Max Price</p>
-                                                        <p className="price-tag" id="slider-range-value2">${values.priceRangeMax}</p>
-                                                    </li>
-                                                </ul>
+                                                
+                                                
+                                            
+                                               <ul className="p-range form-group">
+                                                   
+                                                       
+                                                   <li className="caption">
+                                                   
+                                                   <p className="price-lab" >Min Price</p>
+                                                   <p className="price-tag" id="slider-range-value1"> 
+                                                       {/* $ {values.priceRangeMin} */}
+                                                       <div style={{position:"relative"}}>
+                                                    <span style={{position:"absolute", left:"8px", top:"10px"}}>$</span>
+                                                  <input
+                                                 className="form-control px-3 my-1"
+                                                 type="text"
+                                                 value={values.priceRangeMin}
+                                                 onChange={e=>{
+                                                     if(e.target.value >=0 && e.target.value<=100000){
+                                                        
+                                                         setPrice(e.target.value.replace(/\D/g,''));
+                                                         setDefaultRange({min:e.target.value, max: 100000});
+                                                         
+                                                             
+                                                             setFieldValue("priceRangeMin", e.target.value);
+                                                     }
+                                                     
+                                                     }
+                                                 }
+                                                  />
+                                                   </div>
+                                                   </p>
+                                                 
+                                               </li>
+                                             
+                                             
+                                              
+                                                <li className="text-right caption">
+                                                   
+                                                   <p className="price-lab" >Max Price</p>
+                                                   <p className="price-tag" id="slider-range-value2">
+                                                       {/* ${values.priceRangeMax} */}
+                                                       <div style={{position:"relative"}}>
+                                                    <span style={{position:"absolute", left:"8px", top:"10px"}}>$</span>
+                                                       <input
+                                                      className="form-control px-3 my-1"
+                                                       type="text"
+                                                       value={values.priceRangeMax}
+                                                       onChange={e=>{
+                                                           if(e.target.value >=0 && e.target.value<=100000){
+                                                              
+                                                               setMaxPrice(e.target.value.replace(/\D/g,''));
+                                                               setDefaultRange({min:0, max:e.target.value});
+                                                               
+                                                                   
+                                                                   setFieldValue("priceRangeMax", e.target.value);
+                                                           }
+                                                           
+                                                           }
+                                                       }
+                                                  />
+                                                  </div>
+                                                   </p>
+                                                 
+                                               </li>
+                                           
+
+                                               
+                                           </ul>
+                                   
+                                               
+                                                <Form.Group>
+                                                    <Form.Label class="p-0"><h5 class="label-head mb-0">Category</h5></Form.Label>
+                                                    <CustomDropdown {...{
+                                                        data: (listOfCategory?.length && listOfCategory) || [],
+                                                        bindKey: "displayName",
+                                                        searchKeywords: "",
+                                                        title: (!_.isEmpty(values.category) && getSelectedCategoryTitleBySid({ list: (listOfCategory?.length && listOfCategory) || [], sid: values.category }))
+                                                            || values.selectedCategoryName
+                                                            || "- Select Category -",
+                                                        onSelect: (data) => {
+                                                            setFieldValue("category", data.sid)
+                                                            setFieldValue("selectedCategoryName", data.selectedOption);
+                                                        }
+                                                    }} />
+                                                    <Form.Control.Feedback type="invalid">
+                                                        {errors.category}
+                                                    </Form.Control.Feedback>
+                                                </Form.Group>
                                                 <Form.Group>
                                                     <Form.Label class="p-0"><h5 class="label-head mb-0">Manufacturer</h5></Form.Label>
                                                     <CustomDropdown {...{
@@ -567,6 +703,8 @@ function BuyFilter(props) {
                                                         {errors.grips}
                                                     </Form.Control.Feedback>
                                                 </Form.Group>
+                                               
+                                                
                                             </div>
                                             <div class="add-filter-footer text-center mb-4">
                                                 <input type="submit" value={`See all ${totalCount} Matches`} class="submt-btn submt-btn-dark" onClick={handleSubmit} />
@@ -581,6 +719,7 @@ function BuyFilter(props) {
             </section>
             {locationModel && <Location {...{ locationModel, setLocationModel, setFilterLocation }} />}
         </Layout>
+       
     );
 }
 
