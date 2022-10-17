@@ -52,7 +52,7 @@ const Header = () => {
 	const NO_LOGGEDIN_USER = <LogginButton {...{setLoginModel}}/>;
 	const [userLoggedInNav, setUserLoggedInNav] = useState(NO_LOGGEDIN_USER);
 	let notifActionFlag = useRef(false);
-	
+	let user = localStorage.getItem('currentUser')
 
 	const initCarts = () => {
 		$(".shopping-cart").fadeToggle("fast");
@@ -672,12 +672,13 @@ const Header = () => {
 												id="header-search-btn"
 												variant="outlined"
 												onClick={() => {
-													if (localSearch) {
-														setValueBy("SET_KEYWOARD", localSearch);
-														history.push("/search");
-														goToTopOfWindow();
-														setShowResentSearch(false);
-													}
+													// if (localSearch) {
+													// 	setValueBy("SET_KEYWOARD", localSearch);
+													// 	history.push("/search");
+													// 	goToTopOfWindow();
+													// 	setShowResentSearch(false);
+													// }
+													history.push("/search");
 												}}
 												className="theme-bg"
 											>
@@ -734,7 +735,7 @@ const Header = () => {
 							<div class="col-lg-3 location-box">
 								<div className="user-location-cont">
 									<div className="user-location">
-										{location && location.address && (
+										{location && location.address && user ? (
 											<span
 												className="pointer"
 												onClick={() => setLocationModel(true)}
@@ -747,7 +748,30 @@ const Header = () => {
 														{location.address.municipality},
 														{location.address.postalCode}{" "}
 													</>
-												)}
+												)
+											}
+											</span>
+										): (
+											<span
+												className="pointer"
+												onClick={() => setLocationModel(true)}
+											>
+												{" "}
+												{location.address.countrySubdivision ? (
+												
+													<>
+														{location.address.municipality},
+														{location.address.countrySubdivision}{" "}
+													</>
+												):
+												(
+													<>
+														{location.address.municipality}, 
+														{location.address.postalCode}{" "}
+													</>
+												) 
+												
+											}
 											</span>
 										)}
 									</div>

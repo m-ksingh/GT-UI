@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect, memo } from 'react'
-import { Formik } from "formik"
+import { Formik, Field } from "formik"
 import _ from 'lodash';
 import $ from 'jquery';
 import Spinner from "rct-tpt-spnr";
 import { Form, Row } from 'react-bootstrap';
 import ApiService from "../../../services/api.service";
 import { useAuthState } from '../../../contexts/AuthContext/context';
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { goToTopOfWindow } from '../../../commons/utils';
 import useToast from '../../../commons/ToastHook';
 import PriceSummary from './../PriceSummary';
@@ -22,6 +22,24 @@ const PaymentsView = ({ orderBy, setTab, product, valueToMatch, tabWiseData }) =
     const [myCards, setMyCards] = useState([]);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const userDetails = useAuthState();
+
+    const [number, SetNumber] = useState("");
+    const [name, SetName] = useState("");
+    const [month, SetMonth] = useState("");
+    const [expiry, SetExpiry] = useState("");
+    const [cvc, SetCvc] = useState("");
+    const [focus, SetFocus] = useState("");
+    const [status, setStatus] = useState(false);
+
+    const handleDate = (e) => {
+        SetMonth(e.target.value);
+        // SetExpiry(e.target.value);
+    };
+    const handleExpiry = (e) => {
+        SetExpiry(month.concat(e.target.value));
+    };
+    console.log(month);
+    console.log(expiry);
     useEffect(() => {
         spinner.show("Please wait...");
         ApiService.myCards(userDetails.user.sid).then(
@@ -55,7 +73,7 @@ const PaymentsView = ({ orderBy, setTab, product, valueToMatch, tabWiseData }) =
         let payload = {
             "listingSids": list.map(r => r.sid),
             "toggle": disable
-          };
+        };
         ApiService.isOfferedForTrade(payload).then(
             response => { },
             err => { }
@@ -65,7 +83,7 @@ const PaymentsView = ({ orderBy, setTab, product, valueToMatch, tabWiseData }) =
     }
 
     const cancelAction = () => {
-        if(tabWiseData.tradeListItems && tabWiseData.tradeListItems.length > 0) initIsOfferedForTrade(tabWiseData.tradeListItems, false);
+        if (tabWiseData.tradeListItems && tabWiseData.tradeListItems.length > 0) initIsOfferedForTrade(tabWiseData.tradeListItems, false);
         tabWiseData.tradeListItems = [];
         history.replace('/');
         goToTopOfWindow();
@@ -78,10 +96,10 @@ const PaymentsView = ({ orderBy, setTab, product, valueToMatch, tabWiseData }) =
                     <h2 class="card-title-header create-listing-block mobile-off">Payment Info</h2>
                     <h2 class="desktop-off create-listing-block">Payment Info</h2>
                 </div>
-                {orderBy === 'buy' && <PriceSummary {...{price: tabWiseData.carts.subTotal, product, tabWiseData}}/>}
-                {orderBy === 'bid' &&  <PriceSummary {...{price: tabWiseData.bidInfo.bidValue, product, tabWiseData}}/>}
-                {orderBy === 'trade' && <PriceSummary {...{tabWiseData, product, price: (valueToMatch.isPayBalance && valueToMatch.amount) || 0}}/>}
-                
+                {orderBy === 'buy' && <PriceSummary {...{ price: tabWiseData.carts.subTotal, product, tabWiseData }} />}
+                {orderBy === 'bid' && <PriceSummary {...{ price: tabWiseData.bidInfo.bidValue, product, tabWiseData }} />}
+                {orderBy === 'trade' && <PriceSummary {...{ tabWiseData, product, price: (valueToMatch.isPayBalance && valueToMatch.amount) || 0 }} />}
+
                 <div className="mb-8">
                     <h3 class="attention-header">ATTENTION!</h3>
                     <p className="description-txt mb-2 des-txt-color mobile-off">Select the card from which you want the amount to be debited</p>
@@ -89,6 +107,44 @@ const PaymentsView = ({ orderBy, setTab, product, valueToMatch, tabWiseData }) =
                     <p className="description-txt mb-2 des-txt-color des-txt-aligin desktop-off">Select the card from which you want the amount to be debited</p>
                     <p className="description-txt des-txt-size des-txt-aligin desktop-off">Note : Incase the transaction is a trade or bid, the amount will be deducted once the trade or bid is accepted.</p>
                 </div>
+                <div class="text-right mobile-off">
+                                                        {/* <input type="button" name="Add Card" class="cancel-btn mt-1 " value={status === true ? "Remove" : "Add"} onClick={() => {
+                                                            setStatus(!status);
+                                                            SetNumber("");
+                                                            SetName("");
+                                                            SetMonth("");
+                                                            SetExpiry("");
+                                                            SetCvc("")
+                                                        }
+                                                        } /> */}
+
+                                                    <div className="media-body ml-3 payment">
+                                                        <div className="mt-0"
+                                                        style={{cursor:"pointer"}}
+                                                        onClick={() => {
+                                                            setStatus(!status);
+                                                            SetNumber("");
+                                                            SetName("");
+                                                            SetMonth("");
+                                                            SetExpiry("");
+                                                            SetCvc("")
+                                                        }
+                                                    }
+                                                        
+                                                        ><span>+</span> &nbsp;&nbsp;Add New Card</div>
+                                                       {/* <input type="radio"  value={status === true ? "Remove" : "Add"} onClick={() => {
+                                                            setStatus(!status);
+                                                            SetNumber("");
+                                                            SetName("");
+                                                            SetMonth("");
+                                                            SetExpiry("");
+                                                            SetCvc("")
+                                                        }
+                                                        } /> */}
+                                                    </div >
+
+
+                                                    </div>
                 <div className="pro-passChange-ctn mt-4">
                     <Formik
                         initialValues={initialValues}
@@ -121,11 +177,133 @@ const PaymentsView = ({ orderBy, setTab, product, valueToMatch, tabWiseData }) =
                                                     <div className="media-body ml-3 payment">
                                                         <h5 className="mt-0">XYZ Bank Credit Card</h5>
                                                         <p>{card.cardNumber}</p>
-                                                    </div>
+                                                    </div >
+                                                  
                                                 </div>
                                             </>
                                         })
                                     }
+
+
+                                    {
+                                        status ? <form className='my-3 p-4 ' style={{
+                                            boxShadow: "0px 1px 1px #0000001a",
+                                            border: "1px solid #e2e2e2", width: "100%"
+                                        }}>
+                                            <div className="row">
+                                                <div className="col-sm-6">
+                                                    <label for="name" className="media-body ml-3 payment my-1">Card Number</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder='-----'
+                                                        className="form-control"
+                                                        value={number}
+                                                        name="number"
+                                                        maxlength="16"
+                                                        pattern="[0-9]+"
+                                                        onChange={(e) => {
+                                                            SetNumber(e.target.value);
+                                                        }}
+                                                    // onFocus={(e) => SetFocus(e.target.name)}
+                                                    ></input>
+                                                </div>
+                                                <div className="col-sm-6">
+                                                    <label for="name" className="media-body ml-3 payment my-1">Name</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder='------'
+                                                        className="form-control"
+                                                        value={name}
+                                                        name="name"
+                                                        onChange={(e) => {
+                                                            SetName(e.target.value);
+                                                        }}
+                                                    // onFocus={(e) => SetFocus(e.target.name)}
+                                                    ></input>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div className="row">
+                                                <div
+                                                    className="col-sm-8"
+                                                    style={{
+                                                        ...{ "padding-right": "12em" },
+                                                        ...{ "padding-left": "1em" }
+                                                    }}
+                                                >
+                                                    <label for="month" className="media-body ml-3 payment my-1">Valid upto</label>
+                                                </div>
+
+                                            </div>
+
+                                            <div className="row">
+                                                <div className="col-sm-6">
+                                                    <select
+                                                        className="form-control"
+                                                        name="expiry"
+                                                        onChange={handleDate}
+                                                    >
+                                                        <option hidden>Select Month</option>
+                                                        <option value="01">Jan</option>
+                                                        <option value="02">Feb</option>
+                                                        <option value="03">Mar</option>
+                                                        <option value="04">April</option>
+                                                        <option value="05">May</option>
+                                                        <option value="06">June</option>
+                                                        <option value="07">July</option>
+                                                        <option value="08">Aug</option>
+                                                        <option value="09">Sep</option>
+                                                        <option value="10">Oct</option>
+                                                        <option value="11">Nov</option>
+                                                        <option value="12">Dec</option>
+                                                    </select>
+                                                </div>
+
+                                                <div className="col-sm-6">
+                                                    <select
+                                                        className="form-control"
+                                                        name="expiry"
+                                                        onChange={handleExpiry}
+                                                    >
+                                                        <option hidden>Select Year</option>
+                                                        <option value="22">2022</option>
+                                                        <option value="23">2023</option>
+                                                        <option value="24">2024</option>
+                                                        <option value="25">2025</option>
+                                                        <option value="26">2026</option>
+                                                        <option value="27">2027</option>
+                                                        <option value="28">2028</option>
+                                                        <option value="29">2029</option>
+                                                        <option value="30">2030</option>
+                                                        <option value="31">2031</option>
+                                                        <option value="32">2032</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-sm-6">
+                                                    <label for="cvv" className="media-body ml-3 payment my-1">CVV</label>
+                                                    <input
+                                                        type="password"
+                                                        placeholder='***'
+                                                        name="cvc"
+                                                        maxlength="3"
+                                                        className=" form-control"
+                                                        value={cvc}
+                                                        pattern="\d*"
+                                                        onChange={(e) => {
+                                                            SetCvc(e.target.value);
+                                                        }}
+                                                        onFocus={(e) => SetFocus(e.target.name)}
+                                                    ></input>
+                                                </div>
+                                            </div>
+
+
+                                        </form> : null
+                                    }
+
+
                                 </Form.Group>
                                 {/* <div class="row justify-content-center pt-4 payable-block">
                                     <label>Payable Amout : &nbsp;</label>
@@ -133,9 +311,23 @@ const PaymentsView = ({ orderBy, setTab, product, valueToMatch, tabWiseData }) =
                                     {orderBy === 'bid' && <span> ${tabWiseData.bidInfo.bidValue}</span>}
                                     {orderBy === 'trade' && <span> ${(valueToMatch.isPayBalance && valueToMatch.amount) || 0}</span>}
                                 </div> */}
+
+
+
                                 <div class="text-right mobile-off">
+                                    {/* <input type="button" name="Add Card" class="cancel-btn mt-2" value={status === true ? "Remove Card" : "Add Card"} onClick={() => {
+                                        setStatus(!status);
+                                        SetNumber("");
+                                        SetName("");
+                                        SetMonth("");
+                                        SetExpiry("");
+                                        SetCvc("");
+                                    }
+                                    } /> */}
                                     <input type="button" name="cancel" class="cancel-btn mt-2" value="Cancel" onClick={cancelAction} />
-                                    <input onClick={handleSubmit} disabled={!values.card || (!valueToMatch.offerStatus && orderBy === "trade")} type="button" name="next" class="next action-button nextBtn" value="Continue" />
+                                    <input onClick={handleSubmit} disabled={(!values.card || (!valueToMatch.offerStatus && orderBy === "trade")) && !(number.length > 0 && name.length > 0 && month.length >0 && expiry.length > 0 && cvc.length === 3)} type="button" name="next" class="next action-button nextBtn" value="Continue" />
+
+
                                 </div>
                                 <section class="mobile-btn-section desktop-off">
                                     <div class="container">
@@ -143,21 +335,155 @@ const PaymentsView = ({ orderBy, setTab, product, valueToMatch, tabWiseData }) =
                                             <div class="col-lg-12">
                                                 <div class="proPg-btnArea">
                                                     <div className="proPg-btnArea-div-outer">
+
+                                                        <div className="proPg-btnArea-div-inner">
+
+                                                            <input type="button" value={status === true ? "Remove Card" : "Add Card"} onClick={() => {
+                                                                setStatus(!status);
+                                                                SetNumber("");
+                                                                SetName("");
+                                                                SetMonth("");
+                                                                SetExpiry("");
+                                                                SetCvc("");
+                                                            }} class="submt-btn submt-btn-lignt mr10 text-center full-w" />
+                                                        </div>
                                                         <div className="proPg-btnArea-div-inner">
                                                             <input type="button" value="Cancel" onClick={cancelAction} class="submt-btn submt-btn-lignt mr10 text-center full-w" />
                                                         </div>
                                                         <div className="proPg-btnArea-div-inner">
-                                                            <input type="button" value="Continue" onClick={() => {handleSubmit()}} disabled={!values.card || (!valueToMatch.offerStatus && orderBy === "trade")} class="submt-btn submt-btn-dark text-center full-w" />
+                                                            <input type="button" value="Continue" onClick={() => { handleSubmit() }} disabled={(!values.card || (!valueToMatch.offerStatus && orderBy === "trade")) && !(number.length > 0 && name.length > 0 && month.length > 0 && expiry.length > 0 && cvc.length === 3)} class="submt-btn submt-btn-dark text-center full-w" />
                                                         </div>
+
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </section>
                             </Form>
                         )}
                     </Formik>
+
+
+
+                    {/* <form>
+                        <div className="row">
+                            <div className="col-sm-11">
+                                <label for="name">Card Number</label>
+                                <input
+                                    type="tel"
+                                    className="form-control"
+                                    value={number}
+                                    name="number"
+                                    maxlength="16"
+                                    pattern="[0-9]+"
+                                    onChange={(e) => {
+                                        SetNumber(e.target.value);
+                                    }}
+                                // onFocus={(e) => SetFocus(e.target.name)}
+                                ></input>
+                            </div>
+                        </div>
+                        <br />
+                        <div className="row">
+                            <div className="col-sm-11">
+                                <label for="name">Card Name</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={name}
+                                    name="name"
+                                    onChange={(e) => {
+                                        SetName(e.target.value);
+                                    }}
+                                // onFocus={(e) => SetFocus(e.target.name)}
+                                ></input>
+                            </div>
+                        </div>
+                        <br />
+                        <div className="row">
+                            <div
+                                className="col=sm-8"
+                                style={{
+                                    ...{ "padding-right": "12em" },
+                                    ...{ "padding-left": "1em" }
+                                }}
+                            >
+                                <label for="month">Expiration Date</label>
+                            </div>
+                            <div className="col=sm-2">
+                                <label for="cvv">CVV</label>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-sm-2">
+                                <select
+                                    className="form-control"
+                                    name="expiry"
+                                    onChange={handleDate}
+                                >
+                                    <option value=" ">Month</option>
+                                    <option value="01">Jan</option>
+                                    <option value="02">Feb</option>
+                                    <option value="03">Mar</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">Aug</option>
+                                    <option value="09">Sep</option>
+                                    <option value="10">Oct</option>
+                                    <option value="11">Nov</option>
+                                    <option value="12">Dec</option>
+                                </select>
+                            </div>
+                            &nbsp;
+                            <div className="col-sm-2">
+                                <select
+                                    className="form-control"
+                                    name="expiry"
+                                    onChange={handleExpiry}
+                                >
+                                    <option value=" ">Year</option>
+                                    <option value="21">2021</option>
+                                    <option value="22">2022</option>
+                                    <option value="23">2023</option>
+                                    <option value="24">2024</option>
+                                    <option value="25">2025</option>
+                                    <option value="26">2026</option>
+                                    <option value="27">2027</option>
+                                    <option value="28">2028</option>
+                                    <option value="29">2029</option>
+                                    <option value="30">2030</option>
+                                </select>
+                            </div>
+                            <div className="col-sm-2">
+                                <input
+                                    type="tel"
+                                    name="cvc"
+                                    maxlength="3"
+                                    className=" form-control"
+                                    value={cvc}
+                                    pattern="\d*"
+                                    onChange={(e) => {
+                                        SetCvc(e.target.value);
+                                    }}
+                                    onFocus={(e) => SetFocus(e.target.name)}
+                                ></input>
+                            </div>
+                        </div>
+                        <br />
+                        <input
+                            type="submit"
+                            className="btn btn-secondary form-control"
+                            value="Submit"
+                        />
+                    </form> */}
+
+
                 </div>
             </div>
         </>
