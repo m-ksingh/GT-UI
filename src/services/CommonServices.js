@@ -4,6 +4,7 @@ import moment from 'moment';
 /*
 * Get price with tax 
 */
+
 export const getMyPromtPrice = (price) => {
     price = _.toNumber(price);
     return price + ((price * 10) / 100)

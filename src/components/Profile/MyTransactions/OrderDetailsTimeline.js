@@ -19,7 +19,7 @@ const OrderDetailsTimeline = ({ show, setShow, nl }) => {
             setIsLoading(true);
             ApiService.getOrderHistory(nl.orderSid).then(
                 (response) => {
-                    // console.log(response.data);
+                    console.log(response.data);
                     setOrderTimeline(response.data);
                     spinner.hide();
                     setIsLoading(false);

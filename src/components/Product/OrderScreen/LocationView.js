@@ -18,6 +18,8 @@ import GLOBAL_CONSTANTS from "../../../Constants/GlobalConstants";
 import TermAndCondition from "../../Shared/TermAndCondition/TermAndCondition.";
 import { useBasicModal } from "../../../commons/BasicModal/BasicModalHook";
 import { useConfirmationModal } from "../../../commons/ConfirmationModal/ConfirmationModalHook";
+import Axios from "axios";
+import Geocode from "react-geocode";
 
 const LocationView = ({
     setTab,
@@ -79,7 +81,8 @@ const LocationView = ({
         fflStore: "",
         sheriffLocation: "",
     });
-
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
     // show bid confirmation modal when user click on complete purchase
     const [showBidConfirmModal, BidConfirmationComponent] = useConfirmationModal({
         title: "Bid Confirmation",
@@ -225,6 +228,8 @@ const LocationView = ({
             otherLocation: product?.anyOtherLocations
                 ? product.anyOtherLocations
                 : null,
+            latitude: latitude,
+            longitude: longitude
         };
         spinner.show("Please wait...");
         ApiService.placeOrder(payload)
@@ -298,6 +303,8 @@ const LocationView = ({
             otherLocation: product?.anyOtherLocations
                 ? product.anyOtherLocations
                 : null,
+            latitude: latitude,
+            longitude: longitude
         };
         spinner.show("Please wait...");
         ApiService.placeOrder(payload)
@@ -381,6 +388,8 @@ const LocationView = ({
             otherLocation: product?.anyOtherLocations
                 ? product.anyOtherLocations
                 : null,
+            latitude: latitude,
+            longitude: longitude
         };
         spinner.show("Please wait...");
         ApiService.placeOrder(payload)
@@ -555,6 +564,46 @@ const LocationView = ({
         }
     };
 
+    function codeAddress() {
+        let address;
+        if(product.fflStoreLocation != null){
+            let {licHolderName, premCity, premState, premZipCode } = product.fflStoreLocation;
+            address = `${licHolderName},${premCity},${premState},${premZipCode}`;
+
+        }
+        // else if(product.sheriffOfficeLocation != null){
+
+        // }
+        // else if(product.anyOtherLocations != null){
+
+        // }
+        Geocode.setApiKey("AIzaSyBC7ZclL4mU-l_rP9xB6xYH1WnJiJAnuhM");
+        Geocode.setLanguage("en");
+        // var address = "ACADEMY LTD, JACKSONVILLE, FL, 32225";
+        Geocode.fromAddress(address).then(
+            (response) => {
+              const { lat, lng } = response.results[0].geometry.location;
+
+            //   console.log(lat, lng);
+              setLatitude(lat);
+              setLongitude(lng);
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
+        
+    }
+    
+
+    useEffect(() => {
+        codeAddress();
+    }, [])
+    // console.log(product.fflStoreEnabled);
+    // console.log(product.sheriffOfficeLocation.freeformAddress);
+    // console.log(product.sheriffOfficeLocation);
+    // console.log(product.anyOtherLocations);
+    // console.log(product.fflStoreLocation);
     return (
         <div>
             <h2 class="card-title-header">Select Pickup Location</h2>

@@ -4,7 +4,7 @@ export const DEFAULT_LATLNG = {
   lng: '-77.01991'
 }
 export const MAP_API_KEY = '8MG2TTKDohzEmAuA70AtJOBy6GKhKWWz';
-export const GOOGLE_MAP_API_KEY = 'AIzaSyAib2qoOvefizmKImyPPvuoQd7sS3ZVTFU'; // 'AIzaSyDVcLhp1XxGYkQ7Nr-cymAiW4d3jdOCWEA' //"AIzaSyCe6tEikiNVAmxt9yFzzC5_MX4EU9sSv9A"
+export const GOOGLE_MAP_API_KEY = 'AIzaSyBC7ZclL4mU-l_rP9xB6xYH1WnJiJAnuhM'; // 'AIzaSyDVcLhp1XxGYkQ7Nr-cymAiW4d3jdOCWEA' //"AIzaSyCe6tEikiNVAmxt9yFzzC5_MX4EU9sSv9A"
 export const formatNumber = number => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number);
 }

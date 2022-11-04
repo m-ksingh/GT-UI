@@ -20,6 +20,7 @@ import InputRange from "react-input-range";
 import 'react-input-range/lib/css/index.css';
 
 function BuyFilter(props) {
+
     let defaultValues = GLOBAL_CONSTANTS.DATA.DEFAULT_FILTER_VALUE;
     const history = useHistory();
     const spinner = useContext(Spinner);
@@ -32,7 +33,7 @@ function BuyFilter(props) {
     const [agree, setAgree] = useState(false);
     const [price, setPrice] = useState('');
     const [maxprice, setMaxPrice] = useState('');
-   
+
     const schema = Yup.object().shape({
         keyword: Yup.string()
             .max(100, "100 Characters Maximum"),
@@ -64,6 +65,43 @@ function BuyFilter(props) {
     const [totalCount, setTotalCount] = useState(0);
     const [sortValues, setSortValues] = useState({ "sort": "REL" });
     const [distance, setDistance] = useState(GLOBAL_CONSTANTS.DEFAULT_DISTANCE);
+    const [average, setAverage] = useState({ mindist: "", maxdist: "" });
+    const [mindist, SetMindist] = useState('');
+    const [maxdist, SetMaxdist] = useState('');
+    const [distanceAvg, setDistanceAVG] = useState("50");
+    const [a, b] = useState(0);
+
+    const onChange = (e) => {
+        let name = e.target.name;
+        let value = e.target.value.replace(/\D/g, "");
+
+        const newValues = {
+            ...average,
+            [name]: value
+        };
+        setAverage(newValues);
+        calcAverage(newValues);
+        calcFirst(newValues);
+        calcSecond(newValues);
+    };
+
+    const calcAverage = (newValues) => {
+        const { first, second } = newValues;
+        const newAverage = (parseInt(first, 10) + parseInt(second, 10)) / 2;
+        setDistanceAVG(newAverage);
+        setDistance(distanceAvg)
+    };
+    const calcFirst = (newValues) => {
+        const { sum, second } = newValues;
+        const newFirst = parseInt(sum, 10) - parseInt(second, 10);
+        SetMindist(newFirst);
+    };
+    const calcSecond = (newValues) => {
+        const { sum, first } = newValues;
+        const newSecond = parseInt(sum, 10) - parseInt(first, 10);
+        SetMaxdist(newSecond);
+    };
+
     const [defaultRange, setDefaultRange] = useState({
         min: 0,
         max: 100000
@@ -212,6 +250,7 @@ function BuyFilter(props) {
             }
         }
         if (values.nationwide) {
+            console.log(values.nationwide);
             payload.distance = GLOBAL_CONSTANTS.US_NATION_RADIUS
             // delete payload.latitude;
             // delete payload.longitude;
@@ -288,8 +327,16 @@ function BuyFilter(props) {
         })}
     </>;
 
+    let avergaedistance = (parseInt(maxdist) + parseInt(mindist)) / 2;
+    //    const [distance, setDistance] = useState(avergaedistance);
+
+    //    console.log(maxdist);
+    //    console.log(mindist);
+    //    console.log(avergaedistance);
+    console.log(distanceAvg);
+
     return (
-        
+
         <Layout title="Buy Products" description="filter view"  >
             <Breadcrumb {...{ data: (props?.location?.state?.breadcrumb && [...props?.location?.state?.breadcrumb]) || [] }} />
             <section id="buy-filter-section">
@@ -349,6 +396,7 @@ function BuyFilter(props) {
                                                 <Form.Group>
                                                     <Form.Check
                                                         onChange={(e) => {
+                                                            console.log(e.target.checked);
                                                             setFieldValue("nationwide", e.target.checked);
                                                             setFieldValue("distance", (e.target.checked ? "1500" : GLOBAL_CONSTANTS.DEFAULT_DISTANCE));
                                                         }}
@@ -359,19 +407,89 @@ function BuyFilter(props) {
                                                         checked={values.nationwide}
                                                     />
                                                 </Form.Group>
-                                                <input
-                                                    type="range"
-                                                    min="1"
-                                                    max="100"
-                                                    value={values.distance}
-                                                    hidden={values.nationwide}
-                                                    className={"rangeslider"}
-                                                    id="myRange"
-                                                    onChange={e => setDistance(e.target.value)}
-                                                    onMouseUp={() => setFieldValue("distance", distance)}
-                                                    onKeyUp={() => setFieldValue("distance", distance)}
-                                                />
+                                                <Form.Group className="range-selector">
+                                                    {/* <h5 className="label-head mb-1">Distance Range in(miles)</h5> */}
+
+                                                    <input
+                                                        type="range"
+                                                        min="1"
+                                                        max="100"
+                                                        value={values.distance}
+                                                        hidden={values.nationwide}
+                                                        className={"rangeslider"}
+                                                        id="myRange"
+                                                        onChange={e => {
+                                                            setDistance(e.target.value)
+                                                             if(e.target.value >=100 || distanceAvg >=100){
+                                                                 setFieldValue("nationwide", true);
+                                                            }
+                                                        }}
+                                                        onMouseUp={() => setFieldValue("distance", distance)}
+                                                        onKeyUp={() => setFieldValue("distance", distance)}
+                                                    />
+                                                </Form.Group>
                                                 <p class="range-btext" hidden={values.nationwide}>{`Within ${values.distance} miles`}</p>
+                                                <ul className="p-range form-group">
+
+
+                                                    <li className="caption" hidden={values.nationwide}>
+
+                                                        <p className="price-lab" >Min Distance</p>
+                                                        <p className="price-tag" id="slider-range-value1">
+                                                            {/* $ {values.priceRangeMin} */}
+
+                                                            <input
+                                                                className="form-control px-3 my-1"
+                                                                type="text"
+                                                                name="first"
+                                                                id="first"
+
+                                                                onChange={onChange}
+                                                            // onChange={e => {
+                                                            //     SetMindist(e.target.value);
+                                                            //     // b((e.target.value + maxdist)/2);
+                                                            //     setFieldValue("distance", e.target.value);
+                                                            //     if (e.target.value > 100) {
+                                                            //         setFieldValue("nationwide", true);
+                                                            //         // setFieldValue("distance", (t ? "1500" : GLOBAL_CONSTANTS.DEFAULT_DISTANCE));
+                                                            //     }
+                                                            // }}
+                                                            />
+
+                                                        </p>
+
+                                                    </li>
+
+
+
+                                                    <li className="text-right caption" hidden={values.nationwide}>
+
+                                                        <p className="price-lab" >Max Distance</p>
+                                                        <p className="price-tag" id="slider-range-value2">
+                                                            {/* ${values.priceRangeMax} */}
+
+                                                            <input
+                                                                className="form-control px-3 my-1"
+                                                                type="text"
+                                                                onChange={onChange}
+                                                                name="second"
+                                                                id="second"
+                                                                // onChange={e => {
+                                                                //     SetMaxdist(e.target.value);
+                                                                //     // b((e.target.value + mindist)/2);
+                                                                //     // setFieldValue("distance", avergaedistance)
+                                                                // }}
+
+                                                            />
+
+                                                        </p>
+
+                                                    </li>
+
+
+
+                                                </ul>
+
                                                 <Form.Group>
                                                     <h5 className="label-head mb-1">Condition</h5>
                                                     {
@@ -405,7 +523,7 @@ function BuyFilter(props) {
                                                             }
                                                         }}
                                                     /> */}
-                                                    
+
                                                     {/* <input
 
                                                      
@@ -426,7 +544,7 @@ function BuyFilter(props) {
                                                         }
 
                                                     /> */}
-                                                 {/* <div className="row">
+                                                    {/* <div className="row">
                                                  <div className="col-6">
                                                   <Form.Label class="p-0"><h5 class="label-head mb-0">Min Price</h5></Form.Label>
                                                     <input
@@ -472,7 +590,7 @@ function BuyFilter(props) {
                                                     </div>
                                                  </div> */}
 
-                                                   
+
                                                     <InputRange
                                                         formatLabel={() => ""}
                                                         minValue={0}
@@ -487,77 +605,77 @@ function BuyFilter(props) {
                                                     />
 
                                                 </Form.Group>
-                                                
-                                                
-                                            
-                                               <ul className="p-range form-group">
-                                                   
-                                                       
-                                                   <li className="caption">
-                                                   
-                                                   <p className="price-lab" >Min Price</p>
-                                                   <p className="price-tag" id="slider-range-value1"> 
-                                                       {/* $ {values.priceRangeMin} */}
-                                                       <div style={{position:"relative"}}>
-                                                    <span style={{position:"absolute", left:"8px", top:"10px"}}>$</span>
-                                                  <input
-                                                 className="form-control px-3 my-1"
-                                                 type="text"
-                                                 value={values.priceRangeMin}
-                                                 onChange={e=>{
-                                                     if(e.target.value >=0 && e.target.value<=100000){
-                                                        
-                                                         setPrice(e.target.value.replace(/\D/g,''));
-                                                         setDefaultRange({min:e.target.value, max: 100000});
-                                                         
-                                                             
-                                                             setFieldValue("priceRangeMin", e.target.value);
-                                                     }
-                                                     
-                                                     }
-                                                 }
-                                                  />
-                                                   </div>
-                                                   </p>
-                                                 
-                                               </li>
-                                             
-                                             
-                                              
-                                                <li className="text-right caption">
-                                                   
-                                                   <p className="price-lab" >Max Price</p>
-                                                   <p className="price-tag" id="slider-range-value2">
-                                                       {/* ${values.priceRangeMax} */}
-                                                       <div style={{position:"relative"}}>
-                                                    <span style={{position:"absolute", left:"8px", top:"10px"}}>$</span>
-                                                       <input
-                                                      className="form-control px-3 my-1"
-                                                       type="text"
-                                                       value={values.priceRangeMax}
-                                                       onChange={e=>{
-                                                           if(e.target.value >=0 && e.target.value<=100000){
-                                                              
-                                                               setMaxPrice(e.target.value.replace(/\D/g,''));
-                                                               setDefaultRange({min:0, max:e.target.value});
-                                                               
-                                                                   
-                                                                   setFieldValue("priceRangeMax", e.target.value);
-                                                           }
-                                                           
-                                                           }
-                                                       }
-                                                  />
-                                                  </div>
-                                                   </p>
-                                                 
-                                               </li>
-                                           
 
-                                               
-                                           </ul>
-                                   
-                                               
+
+
+                                                <ul className="p-range form-group">
+
+
+                                                    <li className="caption">
+
+                                                        <p className="price-lab" >Min Price</p>
+                                                        <p className="price-tag" id="slider-range-value1">
+                                                            {/* $ {values.priceRangeMin} */}
+                                                            <div style={{ position: "relative" }}>
+                                                                <span style={{ position: "absolute", left: "8px", top: "10px" }}>$</span>
+                                                                <input
+                                                                    className="form-control px-3 my-1"
+                                                                    type="text"
+                                                                    value={values.priceRangeMin}
+                                                                    onChange={e => {
+                                                                        if (e.target.value >= 0 && e.target.value <= 100000) {
+
+                                                                            setPrice(e.target.value.replace(/\D/g, ''));
+                                                                            setDefaultRange({ min: e.target.value, max: 100000 });
+
+
+                                                                            setFieldValue("priceRangeMin", e.target.value);
+                                                                        }
+
+                                                                    }
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </p>
+
+                                                    </li>
+
+
+
+                                                    <li className="text-right caption">
+
+                                                        <p className="price-lab" >Max Price</p>
+                                                        <p className="price-tag" id="slider-range-value2">
+                                                            {/* ${values.priceRangeMax} */}
+                                                            <div style={{ position: "relative" }}>
+                                                                <span style={{ position: "absolute", left: "8px", top: "10px" }}>$</span>
+                                                                <input
+                                                                    className="form-control px-3 my-1"
+                                                                    type="text"
+                                                                    value={values.priceRangeMax}
+                                                                    onChange={e => {
+                                                                        if (e.target.value >= 0 && e.target.value <= 100000) {
+
+                                                                            setMaxPrice(e.target.value.replace(/\D/g, ''));
+                                                                            setDefaultRange({ min: 0, max: e.target.value });
+
+
+                                                                            setFieldValue("priceRangeMax", e.target.value);
+                                                                        }
+
+                                                                    }
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </p>
+
+                                                    </li>
+
+
+
+                                                </ul>
+
+
                                                 <Form.Group>
                                                     <Form.Label class="p-0"><h5 class="label-head mb-0">Category</h5></Form.Label>
                                                     <CustomDropdown {...{
@@ -703,8 +821,8 @@ function BuyFilter(props) {
                                                         {errors.grips}
                                                     </Form.Control.Feedback>
                                                 </Form.Group>
-                                               
-                                                
+
+
                                             </div>
                                             <div class="add-filter-footer text-center mb-4">
                                                 <input type="submit" value={`See all ${totalCount} Matches`} class="submt-btn submt-btn-dark" onClick={handleSubmit} />
@@ -719,7 +837,7 @@ function BuyFilter(props) {
             </section>
             {locationModel && <Location {...{ locationModel, setLocationModel, setFilterLocation }} />}
         </Layout>
-       
+
     );
 }
 

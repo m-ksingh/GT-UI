@@ -23,6 +23,8 @@ import GLOBAL_CONSTANTS from "../../Constants/GlobalConstants";
 import LogginButton from "./LogginButton";
 import UserLogginNav from "./UserLogginNav";
 import "./header.css";
+import haversine from 'haversine-distance';
+import axios from "axios";
 
 const NOTIFICATION_TIMER = 1000 * 60;
 const Header = () => {
@@ -49,11 +51,14 @@ const Header = () => {
 	const [showResentSearch, setShowResentSearch] = useState(false);
 	const wrapperRef = useRef(null);
 	const [localSearch, setLocalSearch] = useState("");
-	const NO_LOGGEDIN_USER = <LogginButton {...{setLoginModel}}/>;
+	const NO_LOGGEDIN_USER = <LogginButton {...{ setLoginModel }} />;
 	const [userLoggedInNav, setUserLoggedInNav] = useState(NO_LOGGEDIN_USER);
 	let notifActionFlag = useRef(false);
-	
-
+	let user = localStorage.getItem('currentUser');
+	const [orderDetails, setOrderDetails] = useState([]);
+	const [latitude, setLatitude] = useState('');
+	const [longitude, setLongitude] = useState('');
+	var distanceInMeters;
 	const initCarts = () => {
 		$(".shopping-cart").fadeToggle("fast");
 	};
@@ -353,22 +358,22 @@ const Header = () => {
 			case GLOBAL_CONSTANTS.USER_ROLE.INDIVIDUAL:
 			case GLOBAL_CONSTANTS.USER_ROLE.DEALER:
 				setUserLoggedInNav(<UserLogginNav {...{
-					notifCount, 
-					setShow, 
-					updateNotificationAlert, 
-					getAllNotificationsList, 
+					notifCount,
+					setShow,
+					updateNotificationAlert,
+					getAllNotificationsList,
 					userLogout
-				}}/>);
+				}} />);
 				break;
 			default:
 				setUserLoggedInNav(NO_LOGGEDIN_USER);
 				break;
 		}
-	}, [userDetails, notifCount ]);
+	}, [userDetails, notifCount]);
 
 	// update notification list whenever user take action in mytransactions
 	useEffect(() => {
-		if(!_.isEmpty(updateNotificationAt)) {
+		if (!_.isEmpty(updateNotificationAt)) {
 			getAllNotificationsList();
 		}
 	}, [updateNotificationAt])
@@ -420,96 +425,165 @@ const Header = () => {
 	}, [loginModel]);
 
 	const initBuySell = (path) => {
-        if (userDetails && userDetails.user && userDetails.user.sid) {
-            history.push({
-                pathname: path,
-                state: {
-                    breadcrumb: [
-                        { name: "Home",path: `/` },
-                        {  name: (path === "/getservice" && "Get Service") || (path === "/buyfilter" && "Buy") || (path === "/create-listing" && "Create Listing")}
-                    ]
-                }
-            });
-        } else {
-            setValueBy('SET_LOGIN', true);
-        }
-    }
+		if (userDetails && userDetails.user && userDetails.user.sid) {
+			history.push({
+				pathname: path,
+				state: {
+					breadcrumb: [
+						{ name: "Home", path: `/` },
+						{ name: (path === "/getservice" && "Get Service") || (path === "/buyfilter" && "Buy") || (path === "/create-listing" && "Create Listing") }
+					]
+				}
+			});
+		} else {
+			setValueBy('SET_LOGIN', true);
+		}
+	}
 
+	const getAllOrders = () => {
+		//First point in your haversine calculation
+		//Second point in your haversine calculation
+		//let a, b;
+		let point1 = {}, point2 = {};
+		const userSid = userDetails.user.sid;
+
+		navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+		// if (navigator.geolocation) {
+		// 	navigator.geolocation.getCurrentPosition((position) => {
+
+		// 		setLatitude(position.coords.latitude);
+		// 		setLongitude(position.coords.longitude);
+
+		// 	});
+		// }
+		point1["lat"] = latitude;
+		point1["lng"] = longitude;
+		// let userLatitude = latitude;
+		// let userLongitude = longitude;
+		// console.log("lat" + userLatitude);
+		// console.log("lng" + userLongitude);
+		// let diffLatitude, diffLongitude;
+
+		ApiService.getAllOrders(userSid).then(
+			(response) => {
+				setOrderDetails(response.data);
+				console.log(response.data[0]);
+				// for (let i = 0; i < response.data.length; i++) {
+				if (response.data[0].sid === "F2649BD283674D5B99FBA86550EF808C11D5635E142245C6A33D8B9D5F1D6EA2") {
+					point2["lat"] = response.data[0].latitude;
+					point2["lng"] = response.data[0].longitude;
+					//break;
+				}
+				//}
+				console.log(point1, point2);
+				distanceInMeters = haversine(point1, point2);
+				console.log(distanceInMeters);
+				if(distanceInMeters > 100){
+					Toast.success({
+                	message: `You are ${distanceInMeters -100} meters`,
+                	time: 6000,
+                });
+				}
+				// clearCart();
+				// dispatch({ type: "LOGOUT" });
+				// history.push("/");
+				// goToTopOfWindow();
+				// spinner.hide();
+				// Toast.success({
+				// 	message: "You have been successfully logged out",
+				// 	time: 2000,
+				// });
+			})
+	};
+
+	// useEffect(() => {
+	// 	getAllOrders();
+	// }, []);
+	const successCallback = (position) => {
+		setLatitude(position.coords.latitude);
+		setLongitude(position.coords.longitude);
+		console.log(position);
+	};
+
+	const errorCallback = (error) => {
+		console.log(error);
+	};
+	//console.log(distanceInMeters);
 	return (
 		<>
 			<div id="" class="top-section head-margin-top">
-					<div class="container">
-						<div class="row aic">
-							<div class="col-lg-3 mobile-off">
-								<ul class="nav">
-									<li class="nav-item">
-										<a class="nav-link nav-text-color" href="#">Contact Us</a>
-									</li>
-								</ul>
-							</div>
-							<div class="col-lg-9 col-sm-12">
-								<ul class="nav justify-content-end">
-									<li class="nav-item" onClick={() => initBuySell('/buyfilter')}>
-										<a class="nav-link cp nav-text-color">Buy</a>
-									</li>
-									<li class="nav-item" onClick={() => initBuySell('/create-listing')}>
-										<a class="nav-link cp nav-text-color">Sell</a>
-									</li>
-									<li class="nav-item" onClick={() => initBuySell('/getservice')}>
-										<a class="nav-link cp nav-text-color">Get Service</a>
-									</li>
+				<div class="container">
+					<div class="row aic">
+						<div class="col-lg-3 mobile-off">
+							<ul class="nav">
+								<li class="nav-item">
+									<a class="nav-link nav-text-color" href="#">Contact Us</a>
+								</li>
+							</ul>
+						</div>
+						<div class="col-lg-9 col-sm-12">
+							<ul class="nav justify-content-end">
+								<li class="nav-item" onClick={() => initBuySell('/buyfilter')}>
+									<a class="nav-link cp nav-text-color">Buy</a>
+								</li>
+								<li class="nav-item" onClick={() => initBuySell('/create-listing')}>
+									<a class="nav-link cp nav-text-color">Sell</a>
+								</li>
+								<li class="nav-item" onClick={() => initBuySell('/getservice')}>
+									<a class="nav-link cp nav-text-color">Get Service</a>
+								</li>
 
-									{userDetails.user && (userDetails.user.appUserType === "INDIVIDUAL" && !userDetails.user.adminToFFlStore) && <li class="nav-item">
-										<Link
-											class="nav-link nav-text-color"
-											to={{
-												pathname: `/store/welcome`,
-												state: {
-													breadcrumb: [
-														{
-															name: "Home",
-															path: "/",
-														},
-														{
-															name: "Become a Dealer",
-														},
-													],
-												},
-											}}
-										>
-											Become a Dealer
-										</Link>
-									</li>}
-									{(userDetails.user && userDetails.user.appUserType === "DEALER" || userDetails.user.adminToFFlStore) && <li class="nav-item">
-										<Link
-											class="nav-link nav-text-color"
-											to={{
-												pathname: "store/mystores",
-												state: {
-													breadcrumb: [
-														{
-															name: "Home",
-															path: "/"
-														},
-														{
-															name: "My Stores",
-															path: "/store/mystores"
-														},
-														{
-															name: "My Stores"
-														}
-													]
-												}
-											}}
-										>
-											My Stores
-										</Link>
-									</li>}
-								</ul>
-							</div>
+								{userDetails.user && (userDetails.user.appUserType === "INDIVIDUAL" && !userDetails.user.adminToFFlStore) && <li class="nav-item">
+									<Link
+										class="nav-link nav-text-color"
+										to={{
+											pathname: `/store/welcome`,
+											state: {
+												breadcrumb: [
+													{
+														name: "Home",
+														path: "/",
+													},
+													{
+														name: "Become a Dealer",
+													},
+												],
+											},
+										}}
+									>
+										Become a Dealer
+									</Link>
+								</li>}
+								{(userDetails.user && userDetails.user.appUserType === "DEALER" || userDetails.user.adminToFFlStore) && <li class="nav-item">
+									<Link
+										class="nav-link nav-text-color"
+										to={{
+											pathname: "store/mystores",
+											state: {
+												breadcrumb: [
+													{
+														name: "Home",
+														path: "/"
+													},
+													{
+														name: "My Stores",
+														path: "/store/mystores"
+													},
+													{
+														name: "My Stores"
+													}
+												]
+											}
+										}}
+									>
+										My Stores
+									</Link>
+								</li>}
+							</ul>
 						</div>
 					</div>
 				</div>
+			</div>
 			<header id="main-header" class="section-header sticky">
 				{/* <div id="top-head" class="top-section head-margin-top">
 					<div class="container">
@@ -589,7 +663,7 @@ const Header = () => {
 				</div> */}
 				<div id="top-head" class="py-3">
 					<div class="container">
-						
+
 						<div class="row aic">
 							<div class="col-6 col-md-6 col-lg-2 mob-border">
 								<div class="logo">
@@ -672,12 +746,13 @@ const Header = () => {
 												id="header-search-btn"
 												variant="outlined"
 												onClick={() => {
-													if (localSearch) {
-														setValueBy("SET_KEYWOARD", localSearch);
-														history.push("/search");
-														goToTopOfWindow();
-														setShowResentSearch(false);
-													}
+													// if (localSearch) {
+													// 	setValueBy("SET_KEYWOARD", localSearch);
+													// 	history.push("/search");
+													// 	goToTopOfWindow();
+													// 	setShowResentSearch(false);
+													// }
+													history.push("/search");
 												}}
 												className="theme-bg"
 											>
@@ -734,7 +809,7 @@ const Header = () => {
 							<div class="col-lg-3 location-box">
 								<div className="user-location-cont">
 									<div className="user-location">
-										{location && location.address && (
+										{location && location.address && user ? (
 											<span
 												className="pointer"
 												onClick={() => setLocationModel(true)}
@@ -747,7 +822,30 @@ const Header = () => {
 														{location.address.municipality},
 														{location.address.postalCode}{" "}
 													</>
-												)}
+												)
+												}
+											</span>
+										) : (
+											<span
+												className="pointer"
+												onClick={() => setLocationModel(true)}
+											>
+												{" "}
+												{location.address.countrySubdivision ? (
+
+													<>
+														{location.address.municipality},
+														{location.address.countrySubdivision}{" "}
+													</>
+												) :
+													(
+														<>
+															{location.address.municipality},
+															{location.address.postalCode}{" "}
+														</>
+													)
+
+												}
 											</span>
 										)}
 									</div>
@@ -1118,7 +1216,7 @@ const Header = () => {
 					</div>
 				</div>
 			</header>
-			
+
 			{loginModel && <Login {...{ loginModel, setLoginModel }} />}
 			{cartModel && <CartModel {...{ cartModel, setCartModel }} />}
 			{show && (
@@ -1143,6 +1241,14 @@ const Header = () => {
 					{...{ locationModel, setLocationModel, updateUserLocation }}
 				/>
 			)}
+			{/* <button onClick={getAllOrders}>Distance</button>
+			<button onClick={() => {
+					Toast.success({
+						message: "Seller meets buyer",
+						time: 2000,
+					});
+
+			}}>ShowAlert</button> */}
 		</>
 	);
 };

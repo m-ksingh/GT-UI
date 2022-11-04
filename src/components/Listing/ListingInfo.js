@@ -104,6 +104,8 @@ const ListingInfo = ({
     const [isSingle, setIsSingle] = useState(listInfoByView?.info.isSingle);
     const Toast = useToast();
 
+    const locationLatLon = JSON.parse(localStorage.getItem("location"));
+    // console.log(locationLatLon.position);
     const handleUpdateListingInfo = (listingInfo) => {
         try {
             if (!_.isEmpty(listingInfo.info)) {
@@ -687,8 +689,8 @@ const ListingInfo = ({
         try {
             spinner.show("Loading... Please wait...");
             let payload = {
-                "latitude": listInfoByView.location.lat,
-                "longitude": listInfoByView.location.lng,
+                "latitude": locationLatLon.position.lat,
+                "longitude": locationLatLon.position.lon,
                 // "latitude": userDetails?.user?.appUserHasAddressTO?.latitude,
                 // "longitude": userDetails?.user?.appUserHasAddressTO?.longitude,
                 "distance": distance ? distance : "100",
@@ -717,15 +719,16 @@ const ListingInfo = ({
     const fetchSheriffOfficesByLatLng = (coords = {}, distance) => {
         try {
             const payload = {
-                lat: coords.lat,
-                lon: coords.lng || coords.lon,
+                lat: locationLatLon.position.lat,
+                lon: locationLatLon.position.lon,
                 radius: distance ? distance : '100',
                 key: MAP_API_KEY
             }
 
             ApiService.getSheriffLocation(payload).then(
                 response => {
-                    let tmpArr = response?.data?.results.map(r => ({ ...r.address }));
+                    
+                    let tmpArr = response?.data?.results.map(r => ({ ...r, name: `${r.poi.name}, ${r.address.freeformAddress}`}));
                     setListOfSheriffLocation(tmpArr || []);
                 }, err => {
                     console.error("Exception occurred when fetchSheriffOfficesByLatLng -- ", err);
@@ -1626,7 +1629,7 @@ const ListingInfo = ({
                                                                 }
                                                             </div>
                                                         }
-                                                        {values.tradeWith === 'specific' && <p className="fild-caption mt-3 mb-2" style={{ color: "#6c757d" }}>Note: When you want to trade this with a specific item, you will not be able to instantly sell or auction this item, You can only trade</p>}
+                                                        {values.tradeWith === 'specific' && <p className="fild-caption mt-3 mb-2" style={{ color: "#6c757d" , fontSize:"13px"}}>Note: When you want to trade this with a specific item, you will not be able to instantly sell or auction this item, You can only trade</p>}
                                                     </div>
                                                 </>
                                             }
@@ -1710,10 +1713,13 @@ const ListingInfo = ({
                                                     setFieldValue("tradeReservePrice", '');
                                                     setFieldValue("auctionReservePrice", 0);
                                                 }}
+                                             style={{fontSize: "14px",
+                                                color: "#000000",
+                                                fontWeight: "600"}}
                                             >Reset</span>
                                         </div>
                                         <div className="row">
-                                            <div className="col-12 text-muted f10">Note: Single item can be listed either only for trade or bid along with instant buy</div>
+                                            <div className="col-12 text-muted f15">Note: Single item can be listed either only for trade or bid along with instant buy</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2058,9 +2064,9 @@ const ListingInfo = ({
                                                                     <Form.Label className="px-0"><h5 className="label-head">Sherriff's Office<sup className="">*</sup></h5></Form.Label>
                                                                     <CustomDropdown {...{
                                                                         data: Array.isArray(listOfSheriffLocation) ? listOfSheriffLocation : [],
-                                                                        bindKey: "freeformAddress",
+                                                                        bindKey: "name",
                                                                         searchKeywords: "",
-                                                                        title: selectedSherriffOffice?.freeformAddress || values?.sheriffOfficeLocation?.freeformAddress || ` - Select Sherriff's Office - `,
+                                                                        title: selectedSherriffOffice?.name || values?.sheriffOfficeLocation?.name || ` - Select Sherriff's Office - `,
                                                                         onSelect: (data) => {
                                                                             setSelectedSherriffOffice(data);
                                                                             setFieldValue("sheriffOfficeLocation", data);
