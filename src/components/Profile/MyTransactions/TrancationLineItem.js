@@ -66,7 +66,7 @@ const TrancationLineItem = ({
     const [tradeOffers, setTradeOffers] = useState({});
     const [otherTradeOffers, setOtherTradeOffers] = useState({});
 
-    
+
     const [priceDetails, setPriceDetails] = useState({});
 
     const [showRebidAlert, RebidAlertComponent] = useBasicModal({
@@ -74,6 +74,7 @@ const TrancationLineItem = ({
         hideHeader: true
     });
 
+    // console.log(nl.deliveryStatus);
     /**
         Check true or false of expand and collapse data 
         @prams - sid : selected item id 
@@ -141,7 +142,7 @@ const TrancationLineItem = ({
         try {
             ApiService.viewOtherTradeItems(info.orderHasListingsDetailsSid, info.tradeOfferListingSid).then(
                 (response) => {
-                    setOtherTradeOffers({...tradeOffers, [info.tradeOfferListingSid]: response.data});
+                    setOtherTradeOffers({ ...tradeOffers, [info.tradeOfferListingSid]: response.data });
                     spinner.hide();
                 },
                 (err) => {
@@ -236,51 +237,51 @@ const TrancationLineItem = ({
         }
     }
 
-   // this method trigger when user click on rebid
-   const handleRebid = async (nl, type="bid", sell=false) => {
-    try {
-        spinner.show("Please wait...");
-        let isListingActive = await ApiService.validateActiveListing(nl.notificationJson.sid);
-        if(isListingActive.data) {
-            if(history?.location?.pathname 
-                && (history.location.pathname.split("/")[2] == 'bid' || history.location.pathname.split("/")[1] == 'product')) {
+    // this method trigger when user click on rebid
+    const handleRebid = async (nl, type = "bid", sell = false) => {
+        try {
+            spinner.show("Please wait...");
+            let isListingActive = await ApiService.validateActiveListing(nl.notificationJson.sid);
+            if (isListingActive.data) {
+                if (history?.location?.pathname
+                    && (history.location.pathname.split("/")[2] == 'bid' || history.location.pathname.split("/")[1] == 'product')) {
                     spinner.hide();
-            }
-            history.push({
-                pathname: sell && type === "buy" ? `/product/${nl.notificationJson.sid}` : `/order/bid/${nl.notificationJson.sid}`,
-                state: {
-                    breadcrumb: sell && type === "buy" ? [{
-                            name: "Home",
-                            path: "/"
-                        },
-                        {
-                            name: `${nl.notificationJson.title}`,
-                            path: `/product/${nl.notificationJson.sid}`,
-                        }] 
-                    : [{
-                            name: "Home",
-                            path: "/"
-                        },
-                        {
-                            name: `${nl.notificationJson.title}`,
-                            path: `/product/${nl.notificationJson.sid}`,
-                        },
-                        {
-                            name: `Make a Bid`,
-                            path: `/order/bid/${nl.notificationJson.sid}`,
-                        }],
-                    notifId: nl.sid
                 }
-            })
-        } else {
-            showRebidAlert(nl);
-            updateNotification(nl.sid);
+                history.push({
+                    pathname: sell && type === "buy" ? `/product/${nl.notificationJson.sid}` : `/order/bid/${nl.notificationJson.sid}`,
+                    state: {
+                        breadcrumb: sell && type === "buy" ? [{
+                            name: "Home",
+                            path: "/"
+                        },
+                        {
+                            name: `${nl.notificationJson.title}`,
+                            path: `/product/${nl.notificationJson.sid}`,
+                        }]
+                            : [{
+                                name: "Home",
+                                path: "/"
+                            },
+                            {
+                                name: `${nl.notificationJson.title}`,
+                                path: `/product/${nl.notificationJson.sid}`,
+                            },
+                            {
+                                name: `Make a Bid`,
+                                path: `/order/bid/${nl.notificationJson.sid}`,
+                            }],
+                        notifId: nl.sid
+                    }
+                })
+            } else {
+                showRebidAlert(nl);
+                updateNotification(nl.sid);
+            }
+        } catch (err) {
+            spinner.hide();
+            console.error('error occur on handleRebid()', err);
         }
-    } catch (err) {
-        spinner.hide();
-        console.error('error occur on handleRebid()', err);
     }
-}
 
     /**  this method trigger when get received bid 
     * @param {String} ohld = order has listing details sid
@@ -538,12 +539,12 @@ const TrancationLineItem = ({
                                     {nl.type !== "trade_offer_received" && <div className="ml10">
                                         <div className="f12 c727">Total Price</div>
                                         <div className="trn-item-price">${nl.totalPrice ? Number(nl.totalPrice).toFixed(2) : 0}</div>
-                                        <div 
-                                            className="text-link f11" 
-                                            onClick={() => { 
+                                        <div
+                                            className="text-link f11"
+                                            onClick={() => {
                                                 // getPriceDetails(nl.notificationJson?.orderDetailsSid || nl?.orderSid); 
-                                                setSelectedOrder(nl); 
-                                                setFareBreakUpModal(true); 
+                                                setSelectedOrder(nl);
+                                                setFareBreakUpModal(true);
                                             }}
                                         >View Price Details</div>
                                     </div>}
@@ -562,10 +563,14 @@ const TrancationLineItem = ({
                     }
                 </div>
                 {
-                    nl.deliveryStatus
-                    && <div className={`trn-item-timeline jcb mb10 col-sm-8 ${nl.orderSid ? "" : "cp-none"}`} onClick={() => { setTimelineModal(true) }}>
+                    nl.deliveryStatus &&  
+                    <div className={`trn-item-timeline jcb mb10 col-sm-8 ${nl.orderSid ? "" : "cp-none"}`} onClick={() => { setTimelineModal(true) }}>
                         <div className="f13 c111 fw600">{nl.deliveryStatus ? showLabelByStatus(nl.deliveryStatus) : ""}</div>
-                        <div className="f10 jcb aic"><div className="c727">{nl.orderLatestActivityDate ? `${moment(nl.orderLatestActivityDate).format('ll')} at ${moment(nl.orderLatestActivityDate).format('LT')}` : ""}</div><div className="px10 trn-item-timeline-arrow"><ICN_CHEVRON_RIGHT {...{ stroke: "#8DB761" }} /></div></div>
+                        <div className="f10 jcb aic">
+                            <div className="c727">{nl.orderLatestActivityDate ? `${moment(nl.orderLatestActivityDate).format('ll')} at ${moment(nl.orderLatestActivityDate).format('LT')}` : ""}</div>
+                            <div className="px10 trn-item-timeline-arrow"><ICN_CHEVRON_RIGHT {...{ stroke: "#8DB761" }} />
+                            </div>
+                        </div>
                     </div>
                 }
             </div>
@@ -621,7 +626,7 @@ const TrancationLineItem = ({
                         </div>
                         {
                             nl.notificationType === NOTIFICATION_CONSTANTS.NOTIFICATION_TYPE.LISTING_SOLD
-                            && (nl.deliveryStatus === NOTIFICATION_CONSTANTS.NOTIFICATION_TYPE.ORDER_PLACED 
+                            && (nl.deliveryStatus === NOTIFICATION_CONSTANTS.NOTIFICATION_TYPE.ORDER_PLACED
                                 || nl.deliveryStatus === NOTIFICATION_CONSTANTS.NOTIFICATION_TYPE.SHIPPING_INFO_PROVIDED)
                             && <div className="">
                                 <Button variant="warning" className="btn btn-sm btn-warning border-round f12 aic jcc" onClick={() => { setOhlSid(nl.notificationJson.ohl); setPickUpdate(true) }}>
@@ -905,7 +910,7 @@ const TrancationLineItem = ({
                                 {
                                     !_.isEmpty(tradeOffers)
                                     && tradeOffers[nl.listingDetailsSid].map((tradeOfferItem, toi) => <div className="b-ddd b-rad-4 mb10 px15" key={tradeOfferItem.sid || toi}>
-                                        <div className="row trn-vao-list-item aic px15" onClick={() => {setSelectedOrder(tradeOfferItem); onExpCollapse(toi)}}>
+                                        <div className="row trn-vao-list-item aic px15" onClick={() => { setSelectedOrder(tradeOfferItem); onExpCollapse(toi) }}>
                                             <div className="col-sm-12 col-md-6 px-0">
                                                 <div className="jcb aic">
                                                     <div className="jcb aic">
@@ -940,7 +945,7 @@ const TrancationLineItem = ({
                                             </div>
                                         </div>
                                         <Collapse in={checkExpandData(toi)}>
-                                           
+
                                             <div className="w100 bt-ddd">
                                                 <div className="f12 pt5"><span className="c333 mr5">Total Cash Offered :</span><span className="fw600">${tradeOfferItem.tradeOfferBalance ? Number(tradeOfferItem.tradeOfferBalance).toFixed(2) : 0}</span></div>
                                                 <div className="row mt5">
@@ -993,7 +998,7 @@ const TrancationLineItem = ({
                                                             </div>)
                                                         }
                                                         {
-                                                            tradeOfferItem.otherOfferedItemCount >= 1 
+                                                            tradeOfferItem.otherOfferedItemCount >= 1
                                                             && _.isEmpty(otherTradeOffers[tradeOfferItem.tradeOfferListingSid])
                                                             && <div className="text-link f12" onClick={() => viewMoreTradeItems(tradeOfferItem)}>View {tradeOfferItem.otherOfferedItemCount} more item(s)</div>
                                                         }
@@ -1011,8 +1016,8 @@ const TrancationLineItem = ({
                                                                     || tradeOfferItem.notificationType === NOTIFICATION_CONSTANTS.NOTIFICATION_TYPE.TRADE_COUNTER_OFFER_REJECTED)
                                                                 && tradeOfferItem.notificationJson?.tradeWithPrice
                                                                 && tradeOfferItem.notificationJson?.price
-                                                                && (Number(tradeOfferItem.notificationJson.tradeWithPrice) >= Number(tradeOfferItem.notificationJson.price) 
-                                                                || ((Number(tradeOfferItem.notificationJson.price) - (Number(tradeOfferItem.notificationJson.tradeOfferBalance) + Number(tradeOfferItem.notificationJson.tradeWithPrice)) <= 0)))
+                                                                && (Number(tradeOfferItem.notificationJson.tradeWithPrice) >= Number(tradeOfferItem.notificationJson.price)
+                                                                    || ((Number(tradeOfferItem.notificationJson.price) - (Number(tradeOfferItem.notificationJson.tradeOfferBalance) + Number(tradeOfferItem.notificationJson.tradeWithPrice)) <= 0)))
                                                                 && <div className="text-danger f10 counter-offer">You cannot counter offer as the buyer’s trade offer value is greater than or equal to the value of your listing</div>
                                                             }
                                                         </div>
@@ -1221,7 +1226,7 @@ const TrancationLineItem = ({
                 show: isProvideShipping,
                 setShow: setIsProvideShipping,
                 orderDetailsSid,
-                nl: {...JSON.parse(nl.notificationJson.orderShippingInfoJson), "notificationJson": JSON.parse(JSON.parse(nl.notificationJson.orderShippingInfoJson).notificationJson)} || nl,
+                nl: { ...JSON.parse(nl.notificationJson.orderShippingInfoJson), "notificationJson": JSON.parse(JSON.parse(nl.notificationJson.orderShippingInfoJson).notificationJson) } || nl,
                 updateNotification: (sid) => {
                     updateNotification(sid);
                 },

@@ -189,6 +189,9 @@ const ApiService =  {
   myOrders(userSid) {
     return AxiosService.get('/mp/v1/get/orders/' + userSid + '/details')
   },
+  getAllOrders(userSid){
+    return AxiosService.get('/mp/v1/get/orders/' + userSid)
+  },
   getOrderHistory(sid) {
     return AxiosService.get('/mp/v1/get/order/history/' + sid)
   },

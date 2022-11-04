@@ -68,7 +68,7 @@ const Tabs = ({
         name: 'Set Pickup Location',
         id: 'location'
     }, {
-        name: 'Order Placed',
+        name: 'Place Order',
         id: 'post'
     }
     ];

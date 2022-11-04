@@ -90,6 +90,7 @@ const MyTransactions = () => {
         }
         getMyTransactions();
     }, [filterBy, selectedListingType, pageNo, updateMyTransactionAt])
+    // console.log(transactions)
 
     return <div className="trn-main bc-white py20">
             <div className="trn-main-title">
