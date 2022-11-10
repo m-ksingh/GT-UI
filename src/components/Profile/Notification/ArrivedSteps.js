@@ -45,6 +45,7 @@ const ArrivedSteps = ({
     const ihaveArrived = async (ohl) => {
         try {
             // To get live location of user
+            // console.log(nl.notificationJson);
             // getAllOrders(nl.notificationJson.orderDetailsSid);
             const asyncGetCurrentPosition = options => new Promise((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject, options);
@@ -123,26 +124,31 @@ const ArrivedSteps = ({
     //     // console.log("lat" + userLatitude);
     //     // console.log("lng" + userLongitude);
     //     // let diffLatitude, diffLongitude;
-
+    //     console.log("user sid", userSid);
+    //     console.log("ohl", ohl);
     //     ApiService.getAllOrders(userSid).then(
     //         (response) => {
     //             setOrderDetails(response.data);
-    //             // console.log(response.data[0]);
+    //             console.log(response.data);
+    //             console.log(ohl);
     //             for (let i = 0; i < response.data.length; i++) {
     //                 if (response.data[i].sid === ohl) {
+                        
+    //                     console.log(response.data[i]);
     //                     point2["lat"] = response.data[i].latitude;
     //                     point2["lng"] = response.data[i].longitude;
-    //                     //break;
+    //                     break;
     //                 }
     //             }
-    //             console.log(point1, point2);
+    //             console.log("points1",point1, "points2",point2);
     //             distanceInMeters = haversine(point1, point2);
     //             console.log(distanceInMeters);
     //             if (distanceInMeters > 100) {
-    //                 Toast.success({
+    //                 Toast.error({
     //                     message: `You are ${distanceInMeters - 100} meters`,
     //                     time: 6000,
     //                 });
+    //                 // spinner.hide();
     //             }
     //             // clearCart();
     //             // dispatch({ type: "LOGOUT" });
@@ -163,15 +169,15 @@ const ArrivedSteps = ({
     // const  geoFindMe = () => {
     //     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     // }
-    // const successCallback = (position) => {
-    //     setLatitude(position.coords.latitude);
-    //     setLongitude(position.coords.longitude);
-    //     console.log(position);
-    // };
+    const successCallback = (position) => {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+        console.log("position calback", position);
+    };
 
-    // const errorCallback = (error) => {
-    //     console.log(error);
-    // };
+    const errorCallback = (error) => {
+        console.log(error);
+    };
 
     // function geoFindMe() {
 
@@ -320,10 +326,13 @@ const ArrivedSteps = ({
                         <Button variant="warning" className="btn-block f16 btn-size" onClick={() => {
                             if (type === NOTIFICATION_CONSTANTS.USER_TYPE.SELLER) {
                                 // ihaveArrived(n1.notificationJson.orderDetailsSid)
+                                console.log(nl.notificationJson);
                                 ihaveArrived(nl.notificationJson.ohl);
                             }
                             // else if (type === NOTIFICATION_CONSTANTS.USER_TYPE.BUYER) {
+                            //     console.log(nl.notificationJson);
                             //     ihaveArrived(nl.notificationJson.ohl);
+                            //     // setAuthenticate(true);
 
                             // } 
                             else {
