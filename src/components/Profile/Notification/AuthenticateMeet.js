@@ -32,11 +32,15 @@ const AuthenticateMeet = ({
     const [timer, setTimer] = useState(GLOBAL_CONSTANTS.OTP_EXP_LIMIT);
     const [dealSuccess, setDealSuccess] = useState(false);
     const [otpExpireCount, setOtpExpireCount] = useState(0);
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
+    const [latitude1, setLatitude] = useState(0);
+    const [longitude1, setLongitude] = useState(0);
     const [orderDetails, setOrderDetails] = useState([]);
+   
     const userDetails = useAuthState();
-    var distanceInMeters, point1 = {};
+    let latitude = null, longitude = null
+    let distanceInMeters=0;
+    var flag=0;
+    
 
     const updateTimer = () => {
         setTimer(prevTimer => prevTimer - 1)
@@ -68,48 +72,31 @@ const AuthenticateMeet = ({
         }
     }
 
-    const getAllOrders = async (ohl) => {
-        //First point in your haversine calculation
-        //Second point in your haversine calculation
-        //let a, b;
-        let point1 = {}, point2 = {}, flag;
+    const getAllOrders = async(ohl) => {
+        
+        let point1 = {}, point2 = {};
         const userSid = userDetails.user.sid;
 
-        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-        // if (navigator.geolocation) {
-        // 	navigator.geolocation.getCurrentPosition((position) => {
+        
+        console.log("apne func k and")
+        console.log(latitude)
+        console.log(longitude)
 
-        // 		setLatitude(position.coords.latitude);
-        // 		setLongitude(position.coords.longitude);
-
-        // 	});
-        // }
         point1["lat"] = latitude;
         point1["lng"] = longitude;
-        // let userLatitude = latitude;
-        // let userLongitude = longitude;
-        // console.log("lat" + userLatitude);
-        // console.log("lng" + userLongitude);
-        // let diffLatitude, diffLongitude;
-        const response = await ApiService.getAllOrders(userSid);
-        // const json = response.json();
-        // setOrderDetails(json);
-        // console.log(response.json());
-
-        for (let i = 0; i <response.data.length; i++) {
-            console.log(response.data[i]);
-            if (response.data[i].sid === ohl) {
-                point2["lat"] = response.data[i].latitude;
-                point2["lng"] = response.data[i].longitude;
-                console.log(point1, point2);
-                break;
-            }
-        }
+       
+        const response = await ApiService.getLocationByOrderid(ohl);
         
-        distanceInMeters = haversine(point1, point2);
+
+        console.log("new response:" +  response.data.latitude)
+        console.log("new response:" +  response.data.longitue)
+        point2["lat"] = response.data.latitude;
+        point2["lng"] = response.data.longitue;
+
+        distanceInMeters=parseInt(haversine(point1, point2));
         console.log(distanceInMeters);
         if (distanceInMeters > 100) {
-            flag = false;
+            flag = 0;
             Toast.error({
                 message: `You are ${distanceInMeters - 100} meters`,
                 time: 6000,
@@ -117,93 +104,26 @@ const AuthenticateMeet = ({
             
         }
         else {
-            flag = true;
+            flag = 1;
             Toast.success({
                 message: `You are ${100 - distanceInMeters} meters`,
                 time: 6000,
             });
             
         }
-        // // ApiService.getAllOrders(userSid).then(
-        // //     (response) => {
-        // //         setOrderDetails(response.data);
-        // //         console.log(response.data);
-        // //         // for (let i = 0; i < response.data.length; i++) {
-        // //         //     if (response.data[i].sid === ohl) {
-        // //         //         point2["lat"] = response.data[i].latitude;
-        // //         //         point2["lng"] = response.data[i].longitude;
-        // //         //         break;
-        // //         //     }
-        // //         // }
-        // //         // console.log(point1, point2);
-        // //         // distanceInMeters = haversine(point1, point2);
-        // //         // console.log(distanceInMeters);
-        // //         // if (distanceInMeters > 100) {
-        // //         //     flag = false;
-        // //         //     Toast.error({
-        // //         //         message: `You are ${distanceInMeters - 100} meters`,
-        // //         //         time: 6000,
-        // //         //     });
-                    
-        // //         // }
-        // //         // else {
-        // //         //     flag = true;
-        // //         //     Toast.success({
-        // //         //         message: `You are ${100 - distanceInMeters} meters`,
-        // //         //         time: 6000,
-        // //         //     });
-                    
-        // //         // }
-        // //         // clearCart();
-        // //         // dispatch({ type: "LOGOUT" });
-        // //         // history.push("/");
-        // //         // goToTopOfWindow();
-        // //         // spinner.hide();
-        // //         // Toast.success({
-        // //         // 	message: "You have been successfully logged out",
-        // //         // 	time: 2000,
-        // //         // });
-        // //     })
-            return flag
+       
     };
 
-    useEffect(() => {
-        getAllOrders();
-    }, []);
+    function Notreached() {
+        return <h1>You have not arrived yet!</h1>;
+      }
 
-    // const  geoFindMe = () => {
-    //     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    // }
-    // const geoLoc = () => {
-    //     const successCallback = (position) => {
-    //         setLatitude(position.coords.latitude);
-    //         setLongitude(position.coords.longitude);
-    //         console.log(position);
-    //     };
-    //     const errorCallback = (error) => {
-    //         console.log(error);
-    //     };
-    //     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-        
-
-    // }
-    const successCallback = (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-        console.log(position);
-    };
-
-    const errorCallback = (error) => {
-        console.log(error);
-    };
+    
     // this method trigger to generate otp
-    const generateOTP = (ohl, latitude, longitude, isPermissionGranted) => {
+    const generateOTP = async(ohl, latitude, longitude, isPermissionGranted) => {
         try {
             spinner.show("Please wait...");
-            console.log("getallorders", getAllOrders(nl.notificationJson.orderDetailsSid));
-            if (getAllOrders(nl.notificationJson.orderDetailsSid)) {
-
-
+            
                 ApiService.arrivedBuyerWithLocation(ohl, { latitude, longitude, isPermissionGranted }).then(
                     response => {
                         spinner.hide();
@@ -220,7 +140,7 @@ const AuthenticateMeet = ({
                         }
                     }
                 );
-            }
+            
        }
         catch (err) {
             console.error("Error in generateOTP---", err)
@@ -238,16 +158,31 @@ const AuthenticateMeet = ({
                 navigator.geolocation.getCurrentPosition(resolve, reject, options);
             });
 
-            let latitude = null, longitude = null, isPermissionGranted = false;
+           let isPermissionGranted = false;
             try {
                 let { coords } = await asyncGetCurrentPosition({ timeout: 3000 });
+                console.log("ye unka")
+                console.log(coords)
                 latitude = coords?.latitude;
                 longitude = coords?.longitude;
+                console.log("Lat:"+latitude)
+                console.log("Long:"+longitude)
+
+                console.log("Cordsl:"+coords.latitude)
+                console.log("Cordsla:"+coords.longitude)
+
+                setLongitude(coords.longitude);
+                setLatitude(coords.latitude);
+                console.log("ye hmara"+latitude1)
+                console.log("ye long hmara"+longitude1);
                 isPermissionGranted = true;
             } catch (err) {
                 // Current location of client was not retrieved
             }
+            getAllOrders(nl.notificationJson.orderDetailsSid);
+            
             generateOTP(ohl, latitude, longitude, isPermissionGranted);
+           
         } catch (err) {
             spinner.hide();
             Toast.error({ message: err.response?.data ? (err.response?.data.error || err.response?.data.status) : 'API Failed', time: 2000 });
@@ -321,7 +256,8 @@ const AuthenticateMeet = ({
                                 {({ handleSubmit, isSubmitting, handleChange, touched, errors, values, setFieldValue, isValid, dirty }) => (<form>
                                     <div className="am-otp-label">Enter the 4-Digit Meeting Code provided by the {type === NOTIFICATION_CONSTANTS.USER_TYPE.SELLER ? " buyer " : " seller "}<span className="mandatory">*</span></div>
                                     <div className="otp-inp-box jcc">
-                                        <div>
+                                      {console.log(flag)}
+                                   <div>
                                             <OtpInput
                                                 value={otp}
                                                 onChange={(o) => { setOtp(o); setInvalid(false); }}
@@ -354,9 +290,9 @@ const AuthenticateMeet = ({
                             </Formik>
                             : <div>
                                 {!dealSuccess && <div className="am-otp-label">Once the seller hand overs the item, please provide the following 'Meeting Code' to the seller</div>}
-                                <div className="jcc py10">
+                                {flag==1?<div className="jcc py10">
                                     <div className="text-center">
-                                        <div className="jcb">
+                                    <div className="jcb">
                                             {
                                                 otp
                                                 && otp.toString().split("").map((d, i) => <div key={i} className="otp-num">{d}</div>)
@@ -395,7 +331,7 @@ const AuthenticateMeet = ({
                                         }
 
                                     </div>
-                                </div>
+                                </div>:<Notreached/>}
                                 <p className="am-otp-label mt-3 mb-2" style={{ color: "#EF5009" }}>Note: Once you click on 'Complete Purchase', this transaction will be completed</p>
                                 <div className="my10">
                                     {/* setShow(false); updateNotification(nl.sid) */}

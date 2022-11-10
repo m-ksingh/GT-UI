@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import Modal from "../../Shared/Modal";
 import { Button } from "react-bootstrap";
 import ApiService from '../../../services/api.service';
-import AuthenticateMeet from './AuthenticateMeet';
+import AuthenticateMeet from './AuthenticateMeet'; 
 import { useAuthState } from "../../../contexts/AuthContext/context";
 import bgCheckmarkIcon from '../../../assets/images/icon/bg_checkmark.png';
 import ReportIssue from "../../Shared/ReportIssue";
@@ -33,11 +33,10 @@ const ArrivedSteps = ({
     const [tpType, setTpType] = useState('');
     const [orderDetails, setOrderDetails] = useState([]);
     let user = localStorage.getItem('currentUser');
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
-
+    var flag=0;
     const userDetails = useAuthState();
-    var distanceInMeters, point1 = {};
+    var distanceInMeters=0, point1 = {};
+    let latitude = null, longitude = null;
 
     /**  this method is triggered when seller click on i have arrived at the location
      * @param {String} ohl = order has listing sid
@@ -46,31 +45,40 @@ const ArrivedSteps = ({
         try {
             // To get live location of user
             // console.log(nl.notificationJson);
-            // getAllOrders(nl.notificationJson.orderDetailsSid);
             const asyncGetCurrentPosition = options => new Promise((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject, options);
             });
 
-            let latitude = null, longitude = null, isPermissionGranted = false;
+            let isPermissionGranted = false;
             try {
                 let { coords } = await asyncGetCurrentPosition({ timeout: 3000 });
                 latitude = coords?.latitude;
                 longitude = coords?.longitude;
                 isPermissionGranted = true;
+                await getAllOrders(nl.notificationJson.orderDetailsSid);
             } catch (err) {
                 // Current location of client was not retrieved
             }
-            ApiService.arrivedSellerWithLocation(ohl, { latitude, longitude, isPermissionGranted }).then(
-                response => {
-                    setAuthenticate(true);
-                },
-                err => {
-                    if (err && err.response.status === 401) {
-                        Toast.success({ message: 'Please Wait for buyer to initiate the OTP Process.', time: 3000 });
+            if(flag)
+            {
+                ApiService.arrivedSellerWithLocation(ohl, { latitude, longitude, isPermissionGranted }).then(
+                    response => {
+                        setAuthenticate(true);
+                    },
+                    err => {
+                        if (err && err.response.status === 401) {
+                            Toast.success({ message: 'Please Wait for buyer to initiate the OTP Process.', time: 3000 });
+                        }
+                        setShow(false);
                     }
-                    setShow(false);
-                }
-            );
+                );
+               
+            }
+            else{
+                Toast.error({ message: 'Bsdk Location pr pahuch jaa phle', time: 3000 });
+            }
+
+           
         } catch (err) {
             Toast.error({ message: err.response?.data ? (err.response?.data.error || err.response?.data.status) : 'API Failed', time: 2000 });
             console.error('error occur on ihaveArrived()', err);
@@ -101,155 +109,57 @@ const ArrivedSteps = ({
         }
     }
 
-    // const getAllOrders = (ohl) => {
-    //     //First point in your haversine calculation
-    //     //Second point in your haversine calculation
-    //     //let a, b;
-    //     let point1 = {}, point2 = {};
-    //     const userSid = userDetails.user.sid;
+    const getAllOrders = async(ohl) => {
+        //First point in your haversine calculation
+        //Second point in your haversine calculation
+        //let a, b;
+        let point1 = {}, point2 = {};
+        const userSid = userDetails.user.sid;
 
-    //     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    //     // if (navigator.geolocation) {
-    //     // 	navigator.geolocation.getCurrentPosition((position) => {
+        //await navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+        // if (navigator.geolocation) {
+        // 	navigator.geolocation.getCurrentPosition((position) => {
 
-    //     // 		setLatitude(position.coords.latitude);
-    //     // 		setLongitude(position.coords.longitude);
+        // 		setLatitude(position.coords.latitude);
+        // 		setLongitude(position.coords.longitude);
 
-    //     // 	});
-    //     // }
-    //     point1["lat"] = latitude;
-    //     point1["lng"] = longitude;
-    //     // let userLatitude = latitude;
-    //     // let userLongitude = longitude;
-    //     // console.log("lat" + userLatitude);
-    //     // console.log("lng" + userLongitude);
-    //     // let diffLatitude, diffLongitude;
-    //     console.log("user sid", userSid);
-    //     console.log("ohl", ohl);
-    //     ApiService.getAllOrders(userSid).then(
-    //         (response) => {
-    //             setOrderDetails(response.data);
-    //             console.log(response.data);
-    //             console.log(ohl);
-    //             for (let i = 0; i < response.data.length; i++) {
-    //                 if (response.data[i].sid === ohl) {
-                        
-    //                     console.log(response.data[i]);
-    //                     point2["lat"] = response.data[i].latitude;
-    //                     point2["lng"] = response.data[i].longitude;
-    //                     break;
-    //                 }
-    //             }
-    //             console.log("points1",point1, "points2",point2);
-    //             distanceInMeters = haversine(point1, point2);
-    //             console.log(distanceInMeters);
-    //             if (distanceInMeters > 100) {
-    //                 Toast.error({
-    //                     message: `You are ${distanceInMeters - 100} meters`,
-    //                     time: 6000,
-    //                 });
-    //                 // spinner.hide();
-    //             }
-    //             // clearCart();
-    //             // dispatch({ type: "LOGOUT" });
-    //             // history.push("/");
-    //             // goToTopOfWindow();
-    //             // spinner.hide();
-    //             // Toast.success({
-    //             // 	message: "You have been successfully logged out",
-    //             // 	time: 2000,
-    //             // });
-    //         })
-    // };
+        // 	});
+        // }
+        console.log("apne func k and")
+        console.log(latitude)
+        console.log(longitude)
 
-    // useEffect(() => {
-    // 	getAllOrders();
-    // }, []);
-
-    // const  geoFindMe = () => {
-    //     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    // }
-    const successCallback = (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-        console.log("position calback", position);
+        point1["lat"] = latitude;
+        point1["lng"] = longitude;
+        const response = await ApiService.getLocationByOrderid(ohl);
+        console.log("new response:" +  response.data.latitude)
+        console.log("new response:" +  response.data.longitue)
+        point2["lat"] = response.data.latitude;
+        point2["lng"] = response.data.longitue;
+        
+        distanceInMeters=parseInt(haversine(point1, point2));
+        console.log(distanceInMeters);
+        if (distanceInMeters > 100) {
+            flag = 0;
+            Toast.error({
+                message: `You are ${distanceInMeters - 100} meters away`,
+                time: 6000,
+            });
+            
+        }
+        else {
+            flag = 1;
+            Toast.success({
+                message: `You are ${100 - distanceInMeters} meters away`,
+                time: 6000,
+            });
+            
+        }
+       
     };
 
-    const errorCallback = (error) => {
-        console.log(error);
-    };
+  
 
-    // function geoFindMe() {
-
-    //     function success(position) {
-    //         setLatitude(position.coords.latitude);
-    //         setLongitude(position.coords.longitude);
-    //         console.log(position);
-    //     }
-
-    //     function error() {
-    //         console.log('Unable to retrieve your location');
-    //     }
-
-    //     if (!navigator.geolocation) {
-    //         console.log('Geolocation is not supported by your browser');
-    //     } else {
-
-    //         navigator.geolocation.getCurrentPosition(success, error);
-    //     }
-
-    // }
-
-    // const getAllOrders = (ods) => {
-    //     const userSid = user.sid;
-    //     // if (navigator.geolocation) {
-    //     //     navigator.geolocation.getCurrentPosition((position) => {
-    //     //         setLatitude(position.coords.latitude);
-    //     //         setLongitude(position.coords.longitude);
-    //     //     });
-    //     // }
-    //     // let userLatitude = latitude;
-    //     // let userLongitude = longitude;
-    //     let diffLatitude, diffLongitude;
-    //     //First point in your haversine calculation
-    //     // var point1 = { lat: userLatitude, lng: userLongitude };
-
-    //     //Second point in your haversine calculation
-    //     // let point2 = {};
-    //     ApiService.getAllOrders(userSid).then(
-    //         (response) => {
-    //             setOrderDetails(response.data);
-    //             // console.log(response.data);
-    //             // for (let i = 0; i < response.data.length; i++) {
-    //             //     if (response.data[i].sid === ods) {
-    //             //         point2.lat = response.data[i].latitude;
-    //             //         point2.lng = response.data[i].longitude;
-    //             //         break;
-    //             //     }
-    //             // }
-    //             // distanceInMeters = haversine(point1, point2);
-
-    //             //TODO: calculate user current location
-    //             //diff between two lat and log
-    //             //if diff less or equals to 100, 
-    //             //else
-    //             //display Toast message, You are diff - 100 meters 
-    //             // clearCart();
-    //             // dispatch({ type: "LOGOUT" });
-    //             // history.push("/");
-    //             // goToTopOfWindow();
-    //             // spinner.hide();
-    //             // Toast.success({
-    //             // 	message: "You have been successfully logged out",
-    //             // 	time: 2000,
-    //             // });
-    //         })
-    // };
-    // useEffect(() => {
-    //     getAllOrders();
-    // }, []);
-
-    // console.log(distanceInMeters);
     return <div>
         <Modal {...{ show, setShow, className: "stf-container" }}>
             <div className="pickup-box">

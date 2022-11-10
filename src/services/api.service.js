@@ -47,6 +47,9 @@ const ApiService =  {
   getListByArg(arg) {
     return AxiosService.get("/mp/v1/get/" + arg);
   },
+  getLocationByOrderid(arg) {
+    return AxiosService.get("/mp/v1/find-chosen-meet-location-coordinates?sid="+arg);
+  },
   getMyLists(userSid) {
     return AxiosService.get("/mp/v1/get/active/listings/" + userSid);
   },

@@ -934,7 +934,7 @@ const NewNotification = ({
                                     setArrived(true);
                                     saveLocation(nl.notificationJson.ohl, nl.notificationJson.type);
                                 }}
-                                disabled={!isTodayCurrentHour({ from: nl.notificationJson.fromTime, to: nl.notificationJson.expiresOn || nl.notificationJson.toTime })}
+                                //disabled={!isTodayCurrentHour({ from: nl.notificationJson.fromTime, to: nl.notificationJson.expiresOn || nl.notificationJson.toTime })}
                             >
                                 <div className="aic">
                                     <div className="">
