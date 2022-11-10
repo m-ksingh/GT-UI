@@ -34,12 +34,12 @@ const AuthenticateMeet = ({
     const [otpExpireCount, setOtpExpireCount] = useState(0);
     const [latitude1, setLatitude] = useState(0);
     const [longitude1, setLongitude] = useState(0);
+    const [flag, setFlag] = useState(0);
     const [orderDetails, setOrderDetails] = useState([]);
    
     const userDetails = useAuthState();
     let latitude = null, longitude = null
     let distanceInMeters=0;
-    var flag=0;
     
 
     const updateTimer = () => {
@@ -96,17 +96,17 @@ const AuthenticateMeet = ({
         distanceInMeters=parseInt(haversine(point1, point2));
         console.log(distanceInMeters);
         if (distanceInMeters > 100) {
-            flag = 0;
+            setFlag(0);
             Toast.error({
-                message: `You are ${distanceInMeters - 100} meters`,
+                message: `You are yet to arrive at the location, you are ${distanceInMeters - 100} meters away`,
                 time: 6000,
             });
             
         }
         else {
-            flag = 1;
+            setFlag(1);
             Toast.success({
-                message: `You are ${100 - distanceInMeters} meters`,
+                message: `You have arrived at the location, you are within ${100 - distanceInMeters} meters`,
                 time: 6000,
             });
             
@@ -115,7 +115,7 @@ const AuthenticateMeet = ({
     };
 
     function Notreached() {
-        return <h1>You have not arrived yet!</h1>;
+        return <p className="am-otp-label mt-3 mb-2" style={{ color: "#FD0902" }}>You have not arrived yet!</p>;
       }
 
     
@@ -234,7 +234,7 @@ const AuthenticateMeet = ({
             clearInterval(timerRef.current);
             setTimerExpired(true);
         }
-    }, [timer])
+    }, [timer,flag])
 
     useEffect(() => {
         if (nl && type === NOTIFICATION_CONSTANTS.USER_TYPE.BUYER) {
@@ -256,7 +256,7 @@ const AuthenticateMeet = ({
                                 {({ handleSubmit, isSubmitting, handleChange, touched, errors, values, setFieldValue, isValid, dirty }) => (<form>
                                     <div className="am-otp-label">Enter the 4-Digit Meeting Code provided by the {type === NOTIFICATION_CONSTANTS.USER_TYPE.SELLER ? " buyer " : " seller "}<span className="mandatory">*</span></div>
                                     <div className="otp-inp-box jcc">
-                                      {console.log(flag)}
+                                      {console.log("flag val:",flag)}
                                    <div>
                                             <OtpInput
                                                 value={otp}

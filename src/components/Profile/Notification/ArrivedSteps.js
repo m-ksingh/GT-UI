@@ -74,9 +74,6 @@ const ArrivedSteps = ({
                 );
                
             }
-            else{
-                Toast.error({ message: 'Bsdk Location pr pahuch jaa phle', time: 3000 });
-            }
 
            
         } catch (err) {
@@ -142,7 +139,7 @@ const ArrivedSteps = ({
         if (distanceInMeters > 100) {
             flag = 0;
             Toast.error({
-                message: `You are ${distanceInMeters - 100} meters away`,
+                message: `You are yet to arrive at the location, you are ${distanceInMeters - 100} meters away`,
                 time: 6000,
             });
             
@@ -150,7 +147,7 @@ const ArrivedSteps = ({
         else {
             flag = 1;
             Toast.success({
-                message: `You are ${100 - distanceInMeters} meters away`,
+                message: `You have arrived at the location, you are within ${100 - distanceInMeters} meters`,
                 time: 6000,
             });
             
