@@ -4,7 +4,7 @@
     padding: 0px !important;
     flex-direction: column;
     width: 40% !important;
-    min-width: 350px !important;
+    /* min-width: 350px !important; */
 }
 .termCondition-body{
     padding: 20px;

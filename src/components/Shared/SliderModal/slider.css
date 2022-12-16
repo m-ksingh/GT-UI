@@ -65,6 +65,7 @@
     color: #111;
     display: grid;
     align-items: center;
+    text-align: center;
   }
   .slider-container{
     display: flex;

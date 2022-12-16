@@ -646,7 +646,7 @@
 
 @media(max-width: 320px){ 
   #button-section{
-    margin-left: -20px;
+    margin-left: -5px;
     
   }
  
@@ -657,4 +657,11 @@
     margin-left: -2px;
 
 }
+}
+
+@media(max-width: 320px){ 
+  .notification-box{
+   margin-left: 70px;
+    
+  }
 }

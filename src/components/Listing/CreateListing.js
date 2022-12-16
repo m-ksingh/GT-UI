@@ -297,7 +297,7 @@ const Listing = (props) => {
                         <div className="row justify-content-center mt-0">
                             <div className="col-12 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
                                 <div className="card nobg">
-                                    <ul id="progressbar">
+                                    <ul id="progressbar" className='d-flex justify-content-center'>
                                         {/* {userDetails.user.appUserType === GLOBAL_CONSTANTS.APP_USER_TYPE.INDIVIDUAL && <li onClick={() => { onClickStep('location') }} className="active pointer" id="location"><strong>Location</strong></li>} */}
                                         <li onClick={() => onClickStep('info')} className={userDetails.user.appUserType === GLOBAL_CONSTANTS.APP_USER_TYPE.INDIVIDUAL && !userDetails.user.adminToFFlStore ? "active pointer" : "active pointer"} id="info"><strong>Info</strong></li>
                                         <li onClick={() => onClickStep('image')} className=" " id="image"><strong>Image</strong></li>
